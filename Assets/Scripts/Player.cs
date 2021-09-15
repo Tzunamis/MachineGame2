@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
      * 
      */
 
+    // All changes to player movement should go in FixedUpdate
+
     [SerializeField] private InputAction movement;
 
     private void Awake()
@@ -28,6 +30,16 @@ public class Player : MonoBehaviour
     }
     private void FixedUpdate()
     {
+
+        // Player control scripts go here
+
+        // Horizontal = 1: right input
+        // Horizontal = -1: left input
+
+        // Vertical = 1: up input
+        // Vertical = -1: down input
+
+
         if (Horizontal == 1)
         {
             gameObject.transform.position += new Vector3(1, 0, 0);
@@ -37,6 +49,7 @@ public class Player : MonoBehaviour
             gameObject.transform.position += new Vector3(-1, 0, 0);
         }
     }
+
 
     private void OnMovementPerformed(InputAction.CallbackContext context)
     {
