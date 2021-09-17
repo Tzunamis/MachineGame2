@@ -10,31 +10,31 @@ public class Machine : MonoBehaviour
 
     public GameObject product; // What the machine produces, if anything
     public float _productRate; // How many items the machine produces per round
+    
 
+    //-----------------HEAT RELATED PARAMETERS----------------------
     [SerializeField]
     private float _currentHeat; // Machine's current heat level
+    private int _adjustedHeat; // Rounded heat to an int, used for calculating heat states
+    private int _prevAdjustedHeat; // Previous adjusted heat, used to skip unnecessary logic
     [SerializeField]
     private float _heatRate; // Machine's rate of change per round (# of times it will change state in a round).
 
-    private int _adjustedHeat; // Rounded heat to an int, used for calculating heat states
-    private int _prevAdjustedHeat; // Previous adjusted heat, used to skip unnecessary logic
-
-    public GameObject repairItemNeeded; // What item is needed to repair the machine
-    private Sprite _repairRequestSprite; // Sprite that appears when the machine is asking for a repair
-
+    // Heat indicator
     private SpriteRenderer _heatIndicator; // Sprite that displays heat information to the player
     private Color _heatColorSafe; // Colour of heat indicator when the machine is in a good state
     private Color _heatColorDanger; // Colour of heat indicator when the machine is no longer stable
     private Color _heatColorCritical; // Colour of heat indicator when the machine is close to exploding
 
-    private GameObject _repairObject;
+    //-----------------REPAIR ITEM PARAMETERS------------------------
     [SerializeField]
-    private GameObject[] _repairObjectArray;
+    private GameObject[] _repairObjectArray; // List of objects the machine might request for repair
+    private GameObject _repairObject; // What item is currently needed to repair the machine
 
     private void Awake()
     {
-        // -------
-
+        // Set initial heat to 0
+        _currentHeat = 0;
 
         // ----------HEAT INDICATOR------------
         // Find heat indicator
@@ -45,9 +45,6 @@ public class Machine : MonoBehaviour
         _heatColorCritical = new Color(1, 0, 0);
         // Set heat colour to safe as a starting point
         SetHeatIndicator(_heatColorSafe);
-
-        // ----------HEAT PARAMETERS------------
-        _heatRate = 4;
     }
 
 
@@ -74,21 +71,30 @@ public class Machine : MonoBehaviour
                 // Safe state
                 case 0:
                     SetHeatIndicator(_heatColorSafe);
+                    ToggleRepairRequest(false);
                     break;
                 // Hot state 1
                 case 1:
                     SetHeatIndicator(_heatColorDanger);
+                    ToggleRepairRequest(true);
                     RequestRepair();
                     break;
                 // Hot state 2
                 case 2:
                     SetHeatIndicator(_heatColorCritical);
                     break;
+                // Hot state 3 (explosion)
+                case 3:
+                    Explode();
+                    break;
                 // Cold state 1 (unimplemented)
                 case -1:
                     break;
                 // Cold state 2 (unimplemented)
                 case -2:
+                    break;
+                // Cold state 3 (freeze) (unimplemented)
+                case -3:
                     break;
             }
         }
@@ -109,22 +115,38 @@ public class Machine : MonoBehaviour
         _heatIndicator.color = newColour;
     }
 
+    // Requests an object for repair
     private void RequestRepair()
     {
+        // ------------CHOOSE REPAIR OBJECT----------------
         // Generate random int
         int rand = Random.Range(0, _repairObjectArray.Length);
         // Set random repair object
         _repairObject = _repairObjectArray[rand];
-        // Display sprite for request
-        Sprite requestSprite = _repairObject.GetComponent<SpriteRenderer>().sprite;
-        transform.Find("RepairRequest").GetComponent<SpriteRenderer>().sprite = requestSprite;
+
+        // ------------DISPLAY SPRITE---------------------
+        // THIS PART WILL CHANGE ONCE WE HAVE ACTUAL SPRITES
+        // Find sprite to change
+        Transform repairRequest = transform.Find("MachineSprite").transform.Find("RepairRequest").transform.Find("RequestSprite");
+        // Find reference sprite from randomly chosen repair object
+        SpriteRenderer requestSprite = _repairObject.GetComponent<SpriteRenderer>();
+        // Change attributes accordingly
+        repairRequest.GetComponent<SpriteRenderer>().sprite = requestSprite.sprite;
+        repairRequest.GetComponent<SpriteRenderer>().color = requestSprite.color;
+        repairRequest.transform.localScale = _repairObject.transform.lossyScale;
     }
 
+    // Enables or disables repair request bubble
+    private void ToggleRepairRequest(bool value)
+    {
+        transform.Find("MachineSprite").transform.Find("RepairRequest").gameObject.SetActive(value);
+    }
 
-    // heat += (heatRate * time.deltaTime)/ roundDuration
-
-    // product spawns every (roundDuration / productRate) seconds
-    // Fetch from a global game timer (probably use modulo)
-    // ...maybe? But what if we want the product rate to change based on heat state?
+    private void Explode()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2);
+        Debug.Log("hits: " + hitColliders.Length);
+        Destroy(gameObject);
+    }
 
 }
