@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Machine : MonoBehaviour
@@ -10,6 +8,9 @@ public class Machine : MonoBehaviour
 
     public GameObject product; // What the machine produces, if anything
     public float _productRate; // How many items the machine produces per round
+    [SerializeField]
+    private float _productProgress; // Current progress (timer) for producing current item
+    private float _damageModifier = 1; // How does the machine's damage affect its production rate?
     
 
     //-----------------HEAT RELATED PARAMETERS----------------------
@@ -26,6 +27,12 @@ public class Machine : MonoBehaviour
     private Color _heatColorDanger; // Colour of heat indicator when the machine is no longer stable
     private Color _heatColorCritical; // Colour of heat indicator when the machine is close to exploding
 
+    //-----------------EXPLOSION PARAMETERS-------------------------
+    private float _explosionRadius = 4; // Radius of machine's explosion
+    private float _fireChance = 0.5f; // Likelyhood of an object catching fire in an explosion
+    private float _explosionHeatShift = 1; // How much does an explosion affect the heat of nearby machines?
+
+
     //-----------------REPAIR ITEM PARAMETERS------------------------
     [SerializeField]
     private GameObject[] _repairObjectArray; // List of objects the machine might request for repair
@@ -35,6 +42,8 @@ public class Machine : MonoBehaviour
     {
         // Set initial heat to 0
         _currentHeat = 0;
+        // Set explosion radius
+        _explosionRadius = 4;
 
         // ----------HEAT INDICATOR------------
         // Find heat indicator
@@ -66,40 +75,18 @@ public class Machine : MonoBehaviour
         // Update states according to adjusted heat
         if(_adjustedHeat != _prevAdjustedHeat)
         {
-            switch (_adjustedHeat)
-            {
-                // Safe state
-                case 0:
-                    SetHeatIndicator(_heatColorSafe);
-                    ToggleRepairRequest(false);
-                    break;
-                // Hot state 1
-                case 1:
-                    SetHeatIndicator(_heatColorDanger);
-                    ToggleRepairRequest(true);
-                    RequestRepair();
-                    break;
-                // Hot state 2
-                case 2:
-                    SetHeatIndicator(_heatColorCritical);
-                    break;
-                // Hot state 3 (explosion)
-                case 3:
-                    Explode();
-                    break;
-                // Cold state 1 (unimplemented)
-                case -1:
-                    break;
-                // Cold state 2 (unimplemented)
-                case -2:
-                    break;
-                // Cold state 3 (freeze) (unimplemented)
-                case -3:
-                    break;
-            }
+            AdjustMachineState();
         }
 
-        
+        // Increment product progress
+        _productProgress += (_productRate * _damageModifier * Time.deltaTime / RoundManager.RoundDuration);
+
+        // Spawn product
+        if (_productProgress >= 1)
+        {
+            ProduceItem();
+        }
+
 
         // Current time:
             // RoundManager.RoundTimer;
@@ -107,6 +94,55 @@ public class Machine : MonoBehaviour
         // Round duration:
             // RoundManager.RoundDuration;
 
+    }
+
+    // Spits out an item
+    private void ProduceItem()
+    {
+        if(product != null)
+        {
+            Instantiate(product, transform.position + -transform.up, Quaternion.identity);
+        }
+        _productProgress = 0;
+    }
+
+    //Changes machine's state according to its heat
+    private void AdjustMachineState()
+    {
+        switch (_adjustedHeat)
+        {
+            // Safe state
+            case 0:
+                SetHeatIndicator(_heatColorSafe);
+                ToggleRepairRequest(false);
+                _damageModifier = 0;
+                break;
+            // Hot state 1
+            case 1:
+                SetHeatIndicator(_heatColorDanger);
+                ToggleRepairRequest(true);
+                RequestRepair();
+                _damageModifier = 0.75f;
+                break;
+            // Hot state 2
+            case 2:
+                SetHeatIndicator(_heatColorCritical);
+                _damageModifier = 0.5f;
+                break;
+            // Hot state 3 (explosion)
+            case 3:
+                Explode();
+                break;
+            // Cold state 1 (unimplemented)
+            case -1:
+                break;
+            // Cold state 2 (unimplemented)
+            case -2:
+                break;
+            // Cold state 3 (freeze) (unimplemented)
+            case -3:
+                break;
+        }
     }
 
     // Changes colour of heat indicator
@@ -142,11 +178,37 @@ public class Machine : MonoBehaviour
         transform.Find("MachineSprite").transform.Find("RepairRequest").gameObject.SetActive(value);
     }
 
+    // Handles explosion
     private void Explode()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2);
-        Debug.Log("hits: " + hitColliders.Length);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _explosionRadius);
+        Debug.Log("Hits: " + hitColliders.Length);
+
+        for(int i = 0; i < hitColliders.Length; i++)
+        {
+            GameObject hitObject = hitColliders[i].gameObject;
+
+            if (hitObject.layer == LayerMask.NameToLayer("Machine"))
+            {
+                Debug.Log("Hit a machine");
+                hitObject.SendMessage("IncrementHeat");
+            }
+            if (hitObject.layer == LayerMask.NameToLayer("Floor"))
+            {
+                Debug.Log("Hit a floor tile");
+
+                if(Random.value <= _fireChance)
+                hitObject.SendMessage("LightOnFire");
+            }
+
+        }
+
         Destroy(gameObject);
     }
 
+    // Used to increase heat when a nearby explosion occurs
+    private void IncrementHeat()
+    {
+        _currentHeat += _explosionHeatShift;
+    }
 }
