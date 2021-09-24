@@ -181,27 +181,33 @@ public class Machine : MonoBehaviour
     // Handles explosion
     private void Explode()
     {
+        // Check for colliders within radius
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _explosionRadius);
-        Debug.Log("Hits: " + hitColliders.Length);
 
-        for(int i = 0; i < hitColliders.Length; i++)
+        if(hitColliders != null)
         {
-            GameObject hitObject = hitColliders[i].gameObject;
-
-            if (hitObject.layer == LayerMask.NameToLayer("Machine"))
+            // Iterate through each collider
+            foreach(Collider2D col in hitColliders)
             {
-                Debug.Log("Hit a machine");
-                hitObject.SendMessage("IncrementHeat");
-            }
-            if (hitObject.layer == LayerMask.NameToLayer("Floor"))
-            {
-                Debug.Log("Hit a floor tile");
+                GameObject hitObject = col.gameObject;
 
-                if(Random.value <= _fireChance)
-                hitObject.SendMessage("LightOnFire");
-            }
+                // If it's a machine, increase the heat
+                if (hitObject.layer == LayerMask.NameToLayer("Machine"))
+                {
+                    hitObject.SendMessage("IncrementHeat");
+                }
 
+                // If it's a floor tile, random chance to set it on fire
+                if (hitObject.layer == LayerMask.NameToLayer("Floor"))
+                {
+                    if (Random.value <= _fireChance)
+                        hitObject.SendMessage("LightOnFire");
+                }
+
+            }
         }
+
+        
 
         Destroy(gameObject);
     }

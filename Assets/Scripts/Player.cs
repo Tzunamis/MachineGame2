@@ -18,16 +18,39 @@ public class Player : MonoBehaviour
 
     // All changes to player movement should go in FixedUpdate
 
+    //----------------MOVEMENT-----------------------
     [SerializeField] private InputAction movement;
+    [SerializeField] private float speed;
+
+    //----------------ITEM AND MACHINE INTERACTION-----------------
+    [SerializeField] private float _interactionRadius;
+    private bool _holdingItem;
+    private LayerMask _interactableObjectLayerMask;
+    private GameObject _interactableObject;
 
     private void Awake()
     {
-        // set animator
-
-
+        // TODO: set animator
         movement.performed += OnMovementPerformed;
         movement.canceled += OnMovementPerformed;
+
+        _holdingItem = false;
     }
+
+    private void Update()
+    {
+        FindInteractableObject();
+        if(_interactableObject != null)
+        {
+            Debug.Log("interactableObject set");
+        }
+        else
+        {
+            Debug.Log("no interactable object");
+        }
+        
+    }
+
     private void FixedUpdate()
     {
 
@@ -42,15 +65,72 @@ public class Player : MonoBehaviour
 
         if (Horizontal == 1)
         {
-            gameObject.transform.position += new Vector3(1, 0, 0);
+            gameObject.transform.position += new Vector3(speed, 0, 0);
         }
         else if (Horizontal == -1)
         {
-            gameObject.transform.position += new Vector3(-1, 0, 0);
+            gameObject.transform.position += new Vector3(-speed, 0, 0);
+        }
+
+        if (Vertical == 1)
+        {
+            gameObject.transform.position += new Vector3(0, speed, 0);
+        }
+        else if (Vertical == -1)
+        {
+            gameObject.transform.position += new Vector3(0, -speed, 0);
         }
     }
 
+    private void FindInteractableObject()
+    {
+        // Set interactable objects based on whether the player is holding an item
+        // If holding item, can only interact with machines
+        if (_holdingItem)
+        {
+            _interactableObjectLayerMask = 1 << 6;
+            Debug.Log("Looking for machines");
+        }
+        // Otherwise, can only interact with items
+        else
+        {
+            _interactableObjectLayerMask = 1 << 8;
+            Debug.Log("Looking for items");
+        }
 
+        // Check for interactable objects within radius
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _interactionRadius, _interactableObjectLayerMask);
+
+
+        if (hitColliders.Length == 0)
+        {
+            _interactableObject = null;
+        }
+        else
+        {
+            
+            // Figure out which interactible object is closest
+            float minDistance = _interactionRadius;
+            foreach (Collider2D col in hitColliders)
+            {
+                GameObject hitObject = col.gameObject;
+                float distanceToObject = (transform.position - hitObject.transform.position).magnitude;
+                // If current object is closest, set it as _interactableObject
+                if (distanceToObject <= minDistance)
+                {
+                    _interactableObject = hitObject;
+                }
+            }
+        }
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, _interactionRadius);
+    }
+
+    // Movement stuff below
     private void OnMovementPerformed(InputAction.CallbackContext context)
     {
         var direction = context.ReadValue<Vector2>();
