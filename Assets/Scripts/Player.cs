@@ -20,13 +20,14 @@ public class Player : MonoBehaviour
 
     //----------------MOVEMENT-----------------------
     [SerializeField] private InputAction movement;
+    [SerializeField] private InputAction interact;
     [SerializeField] private float speed;
 
     //----------------ITEM AND MACHINE INTERACTION-----------------
     [SerializeField] private float _interactionRadius;
-    private bool _holdingItem;
     private LayerMask _interactableObjectLayerMask;
     private GameObject _interactableObject;
+    public Item _heldItem;
 
     private void Awake()
     {
@@ -34,7 +35,8 @@ public class Player : MonoBehaviour
         movement.performed += OnMovementPerformed;
         movement.canceled += OnMovementPerformed;
 
-        _holdingItem = false;
+        interact.performed += OnInteractionPerformed;
+        interact.canceled += OnInteractionPerformed;
     }
 
     private void Update()
@@ -86,7 +88,7 @@ public class Player : MonoBehaviour
     {
         // Set interactable objects based on whether the player is holding an item
         // If holding item, can only interact with machines
-        if (_holdingItem)
+        if (_heldItem != null)
         {
             _interactableObjectLayerMask = 1 << 6;
             Debug.Log("Looking for machines");
@@ -122,13 +124,21 @@ public class Player : MonoBehaviour
                 }
             }
         }
-
     }
 
-    private void OnDrawGizmos()
+    private void OnInteractionPerformed(InputAction.CallbackContext context)
     {
-        Gizmos.DrawWireSphere(transform.position, _interactionRadius);
+        if (_interactableObject != null)
+        {
+            Interactable interactable = _interactableObject.GetComponent<Interactable>();
+            interactable.Interact(this);
+
+        }
+
+
     }
+
+    
 
     // Movement stuff below
     private void OnMovementPerformed(InputAction.CallbackContext context)
@@ -139,17 +149,26 @@ public class Player : MonoBehaviour
         Vertical = direction.y;
     }
 
+    
+
     private void OnDisable()
     {
         movement.Disable();
+        interact.Disable();
     }
 
     private void OnEnable()
     {
         movement.Enable();
+        interact.Enable();
     }
 
     private float Vertical { get; set; }
 
     private float Horizontal { get; set; }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, _interactionRadius);
+    }
 }

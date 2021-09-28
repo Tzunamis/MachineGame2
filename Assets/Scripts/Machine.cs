@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Machine : MonoBehaviour
+public class Machine : MonoBehaviour, Interactable
 {
 
     // FOLLOWING ATTRIBUTE SHOULD BE FETCHED FROM A ROUND MANAGER CLASS
@@ -140,6 +140,8 @@ public class Machine : MonoBehaviour
             case -2:
                 break;
             // Cold state 3 (freeze) (unimplemented)
+                // lower nearby machine temperatures
+                // slow down players
             case -3:
                 break;
         }
@@ -216,5 +218,12 @@ public class Machine : MonoBehaviour
     private void IncrementHeat()
     {
         _currentHeat += _explosionHeatShift;
+    }
+
+    public void Interact(Player player)
+    {
+        Debug.Log("Machine interaction");
+        // Effect on machine based on identity of held item
+        Destroy(player._heldItem);
     }
 }
