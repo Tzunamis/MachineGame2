@@ -3048,10 +3048,9 @@ GameObject:
   - component: {fileID: 1766485725}
   - component: {fileID: 1766485724}
   - component: {fileID: 1766485723}
-  - component: {fileID: 1766485726}
   - component: {fileID: 1766485727}
   - component: {fileID: 1766485722}
-  - component: {fileID: 1766485728}
+  - component: {fileID: 1766485726}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -3151,12 +3150,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1766485721}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bead4aa6272a00409a90581eaff766f, type: 3}
+  m_Script: {fileID: 11500000, guid: 25ff7879939f3bb418a44e9f52aa2995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  Speed: 2
+  walking: 0
 --- !u!114 &1766485727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3184,9 +3184,9 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1766485728}
-        m_TargetAssemblyTypeName: NewMovement, Assembly-CSharp
-        m_MethodName: Walk
+      - m_Target: {fileID: 1766485726}
+        m_TargetAssemblyTypeName: Move1, Assembly-CSharp
+        m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3203,22 +3203,6 @@ MonoBehaviour:
   m_DefaultActionMap: Players
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1766485728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1766485721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44679be84cfb2c4083746e35be5f04f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 5
-  Direction: 0
-  Walkinput: 0
-  Ribody: {fileID: 1766485722}
 --- !u!1001 &1798872469
 PrefabInstance:
   m_ObjectHideFlags: 0
