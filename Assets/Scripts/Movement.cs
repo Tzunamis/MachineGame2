@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
     public float speed = 2.0f;
+    [SerializeField] private float walk;
     
     
     // Start is called before the first frame update
@@ -16,12 +18,16 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
+        
     }
 
 
-    private void Move()
+    private void Move(InputAction.CallbackContext walk)
     {
+        
+        
+        
+        
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.Translate(Vector3.left * speed *Time.deltaTime );
@@ -44,7 +50,17 @@ public class Movement : MonoBehaviour
         }
 
 
-
+        
     }
+
+   
+
+
+
+
+
+
+
+
 
 }

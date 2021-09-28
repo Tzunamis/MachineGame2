@@ -20,11 +20,11 @@ public class @Controller : IInputActionCollection, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Movements"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""25f75127-7d4c-4433-b1f6-56fc411729ec"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)""
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
