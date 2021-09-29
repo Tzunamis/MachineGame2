@@ -4088,20 +4088,44 @@ PrefabInstance:
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: interact.m_Id
+      value: e7a886da-4ec5-4b9b-bae8-fb63ca0a6e17
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: interact.m_Name
+      value: Interact
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: _interactionRadius
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: interact.m_SingletonActionBindings.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: movement.m_SingletonActionBindings.Array.size
-      value: 6
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: interact.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 38a948df-2293-47ae-9831-882df2d65839
       objectReference: {fileID: 0}
     - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: movement.m_SingletonActionBindings.Array.data[5].m_Id
       value: 9b709c97-7a03-4383-8558-f03edaef18af
       objectReference: {fileID: 0}
     - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: interact.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Keyboard>/space
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: movement.m_SingletonActionBindings.Array.data[5].m_Path
       value: <Keyboard>/space
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: interact.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Interact
       objectReference: {fileID: 0}
     - target: {fileID: 8744123148807995837, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: movement.m_SingletonActionBindings.Array.data[5].m_Action

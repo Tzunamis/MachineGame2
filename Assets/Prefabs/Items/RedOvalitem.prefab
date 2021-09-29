@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3140831878987996326}
   - component: {fileID: 1198669266315500916}
   - component: {fileID: 8919093828110501971}
+  - component: {fileID: 4367752060796159497}
   m_Layer: 8
   m_Name: RedOvalitem
   m_TagString: Untagged
@@ -71,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 6
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 0.6603774, g: 0.06541474, b: 0.06541474, a: 1}
   m_FlipX: 0
@@ -99,3 +100,15 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.99999994, y: 1}
   m_Direction: 0
+--- !u!114 &4367752060796159497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4090985416780928143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ab926f172739548b4905985d96d850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

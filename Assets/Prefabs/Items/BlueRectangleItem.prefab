@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1136986571603400449}
   - component: {fileID: 459695108608275263}
   - component: {fileID: 3155471682921550513}
+  - component: {fileID: 6463295632938752442}
   m_Layer: 8
   m_Name: BlueRectangleItem
   m_TagString: Untagged
@@ -71,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 6
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 0.087931626, g: 0.30185893, b: 0.9811321, a: 1}
   m_FlipX: 0
@@ -109,3 +110,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &6463295632938752442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6761951510852570856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ab926f172739548b4905985d96d850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

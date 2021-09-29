@@ -12,7 +12,7 @@ public class Floor : MonoBehaviour
     {
         _isOnFire = false;
         _fireSprite = transform.Find("FireSprite").GetComponent<SpriteRenderer>();
-        _fireSprite.color = new Color(1, 1, 1);
+        _fireSprite.color = GetComponent<SpriteRenderer>().color;
     }
 
     public void LightOnFire()
