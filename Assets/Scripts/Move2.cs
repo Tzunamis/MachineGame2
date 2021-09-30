@@ -25,7 +25,7 @@ public class Move2 : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext move)
     {
-        moveInput = move.ReadValue<Vector2>();
+        //moveInput = move.ReadValue<Vector2>();
     }
 
 
@@ -38,22 +38,22 @@ public class Move2 : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Translate(moveInput * Speed * Time.deltaTime);
+            transform.Translate(Vector3.left * Speed * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            transform.Translate(moveInput * Speed * Time.deltaTime);
+            transform.Translate(Vector3.right * Speed * Time.deltaTime);
         }
         if (Input.GetKey(KeyCode.W))
         {
-            transform.Translate(moveInput * Speed * Time.deltaTime);
+            transform.Translate(Vector3.up * Speed * Time.deltaTime);
 
 
         }
         else if (Input.GetKey(KeyCode.S))
         {
 
-            transform.Translate(moveInput * Speed * Time.deltaTime);
+            transform.Translate(Vector3.down * Speed * Time.deltaTime);
 
         }
 
