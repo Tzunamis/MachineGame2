@@ -5,7 +5,7 @@ using UnityEngine;
 public class Item : MonoBehaviour, Interactable
 {
     
-    public void Interact(Player player)
+    public void PlayerInteraction(Player player)
     {
         Debug.Log("Item interaction");
         transform.parent = player.transform;
