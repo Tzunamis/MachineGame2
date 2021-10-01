@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
         // TODO: set animator
 
         interact.performed += OnInteractionPerformed;
-        interact.canceled += OnInteractionPerformed;
     }
 
 
@@ -25,7 +24,6 @@ public class Player : MonoBehaviour
     private GameObject _interactableObject;
     public Item _heldItem;
     [SerializeField] private InputAction interact;
-
 
     private void Update()
     {
@@ -40,8 +38,6 @@ public class Player : MonoBehaviour
         }
         
     }
-
-    
 
     private void FindInteractableObject()
     {
@@ -90,18 +86,10 @@ public class Player : MonoBehaviour
         if (_interactableObject != null)
         {
             Interactable interactable = _interactableObject.GetComponent<Interactable>();
-            interactable.Interact(this);
-
+            interactable.PlayerInteraction(this);
         }
 
-
     }
-
-    
-
-    
-
-    
 
     private void OnDisable()
     {
@@ -112,8 +100,6 @@ public class Player : MonoBehaviour
     {
         interact.Enable();
     }
-
-    
 
     private void OnDrawGizmos()
     {
