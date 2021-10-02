@@ -5,39 +5,25 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    /*
-     * Used the following tutorials:
-     * 
-     * UnityEngine.InputSystem
-     * https://www.youtube.com/watch?v=3O9KHy58Fps&ab_channel=InfallibleCode
-     * 
-     * Multiple control schemes
-     * https://www.youtube.com/watch?v=oZbIjeWZz60&ab_channel=InfallibleCode
-     * 
-     */
+
 
     // All changes to player movement should go in FixedUpdate
 
-    //----------------MOVEMENT-----------------------
-    [SerializeField] private InputAction movement;
-    [SerializeField] private InputAction interact;
-    [SerializeField] private float speed;
+
+    private void Awake()
+    {
+        // TODO: set animator
+
+        interact.performed += OnInteractionPerformed;
+    }
+
 
     //----------------ITEM AND MACHINE INTERACTION-----------------
     [SerializeField] private float _interactionRadius;
     private LayerMask _interactableObjectLayerMask;
     private GameObject _interactableObject;
     public Item _heldItem;
-
-    private void Awake()
-    {
-        // TODO: set animator
-        movement.performed += OnMovementPerformed;
-        movement.canceled += OnMovementPerformed;
-
-        interact.performed += OnInteractionPerformed;
-        interact.canceled += OnInteractionPerformed;
-    }
+    [SerializeField] private InputAction interact;
 
     private void Update()
     {
@@ -51,37 +37,6 @@ public class Player : MonoBehaviour
             Debug.Log("no interactable object");
         }
         
-    }
-
-    private void FixedUpdate()
-    {
-
-        // Player control scripts go here
-
-        // Horizontal = 1: right input
-        // Horizontal = -1: left input
-
-        // Vertical = 1: up input
-        // Vertical = -1: down input
-
-
-        if (Horizontal == 1)
-        {
-            gameObject.transform.position += new Vector3(speed, 0, 0);
-        }
-        else if (Horizontal == -1)
-        {
-            gameObject.transform.position += new Vector3(-speed, 0, 0);
-        }
-
-        if (Vertical == 1)
-        {
-            gameObject.transform.position += new Vector3(0, speed, 0);
-        }
-        else if (Vertical == -1)
-        {
-            gameObject.transform.position += new Vector3(0, -speed, 0);
-        }
     }
 
     private void FindInteractableObject()
@@ -131,41 +86,20 @@ public class Player : MonoBehaviour
         if (_interactableObject != null)
         {
             Interactable interactable = _interactableObject.GetComponent<Interactable>();
-            interactable.Interact(this);
-
+            interactable.PlayerInteraction(this);
         }
 
-
     }
-
-    
-
-    // Movement stuff below
-    private void OnMovementPerformed(InputAction.CallbackContext context)
-    {
-        var direction = context.ReadValue<Vector2>();
-
-        Horizontal = direction.x;
-        Vertical = direction.y;
-    }
-
-    
 
     private void OnDisable()
     {
-        movement.Disable();
         interact.Disable();
     }
 
     private void OnEnable()
     {
-        movement.Enable();
         interact.Enable();
     }
-
-    private float Vertical { get; set; }
-
-    private float Horizontal { get; set; }
 
     private void OnDrawGizmos()
     {

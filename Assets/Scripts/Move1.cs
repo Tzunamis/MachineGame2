@@ -25,7 +25,7 @@ public class Move1 : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext move)
     {
-        //moveInput = move.ReadValue<Vector2>();
+        moveInput = move.ReadValue<Vector2>();
     }
 
 

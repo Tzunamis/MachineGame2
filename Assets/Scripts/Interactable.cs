@@ -5,6 +5,6 @@ using UnityEngine;
 public interface Interactable
 {
 
-    public void Interact(Player player);
+    public void PlayerInteraction(Player player);
 
 }

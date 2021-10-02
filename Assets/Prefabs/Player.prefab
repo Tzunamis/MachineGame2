@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5137331703946279416}
   - component: {fileID: 8744123148807995837}
+  - component: {fileID: 6964228607516325894}
   - component: {fileID: 2616648794316903837}
   - component: {fileID: 5526202525149857448}
   - component: {fileID: 7192705347477786753}
@@ -46,59 +47,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae278c3f94b82824e875abe0fdbeb6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interactionRadius: 0.5
+  _heldItem: {fileID: 0}
+  interact:
+    m_Name: Interact
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 7254b1bc-44c1-4a03-adb7-05b1f49da46a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+--- !u!114 &6964228607516325894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427546482797927495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91c7ce8314f18a4d84308aafa939383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   movement:
     m_Name: Movement
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 49f4dc74-2bd4-47ad-9e3c-507eec05d338
+    m_Id: ad7de06c-ca58-4a28-a650-14943303eb4a
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 2D Vector
-      m_Id: 867b1dea-9cc1-46bb-8481-e923d1dbdaac
-      m_Path: 2DVector
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Movement
-      m_Flags: 4
-    - m_Name: up
-      m_Id: 500e3ced-b455-4946-8ddf-31c782bbbe21
-      m_Path: <Keyboard>/w
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Movement
-      m_Flags: 8
-    - m_Name: down
-      m_Id: 0553343f-4d05-4081-a13d-3a738ed116fd
-      m_Path: <Keyboard>/s
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Movement
-      m_Flags: 8
-    - m_Name: left
-      m_Id: ce871277-0ba1-4c8b-92bf-6ebb2a1ef38d
-      m_Path: <Keyboard>/a
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Movement
-      m_Flags: 8
-    - m_Name: right
-      m_Id: 405ca403-9da3-40a3-ab4a-4dd515004c97
-      m_Path: <Keyboard>/d
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Movement
-      m_Flags: 8
-  speed: 0
-  _interactionRadius: 0
-  interactibleObjectLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
+    m_SingletonActionBindings: []
+  speed: 0.2
 --- !u!50 &2616648794316903837
 Rigidbody2D:
   serializedVersion: 4

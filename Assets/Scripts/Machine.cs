@@ -20,6 +20,7 @@ public class Machine : MonoBehaviour, Interactable
     private int _prevAdjustedHeat; // Previous adjusted heat, used to skip unnecessary logic
     [SerializeField]
     private float _heatRate; // Machine's rate of change per round (# of times it will change state in a round).
+    private static float _itemHeatIncrement; // How much items change machine heat
 
     // Heat indicator
     private SpriteRenderer _heatIndicator; // Sprite that displays heat information to the player
@@ -44,6 +45,8 @@ public class Machine : MonoBehaviour, Interactable
         _currentHeat = 0;
         // Set explosion radius
         _explosionRadius = 4;
+        // Item heat increment
+        _itemHeatIncrement = 1;
 
         // ----------HEAT INDICATOR------------
         // Find heat indicator
@@ -220,10 +223,24 @@ public class Machine : MonoBehaviour, Interactable
         _currentHeat += _explosionHeatShift;
     }
 
-    public void Interact(Player player)
+    public void PlayerInteraction(Player player)
     {
         Debug.Log("Machine interaction");
         // Effect on machine based on identity of held item
-        Destroy(player._heldItem);
+        switch (player._heldItem.gameObject.name)
+        {
+            case "Gear(Clone)":
+                Debug.Log("Gear");
+                break;
+            case "Lightbulb(Clone)":
+                _currentHeat += _itemHeatIncrement;
+                break;
+            case "Pipe(Clone)":
+                _currentHeat -= _itemHeatIncrement;
+                break;
+        }
+
+        Destroy(player._heldItem.gameObject);
     }
+
 }
