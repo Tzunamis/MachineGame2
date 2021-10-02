@@ -6,9 +6,12 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
 
-
-    // All changes to player movement should go in FixedUpdate
-
+    //----------------ITEM AND MACHINE INTERACTION-----------------
+    [SerializeField] private float _interactionRadius;
+    private LayerMask _interactableObjectLayerMask;
+    private GameObject _interactableObject;
+    public Item _heldItem;
+    [SerializeField] private InputAction interact;
 
     private void Awake()
     {
@@ -17,26 +20,9 @@ public class Player : MonoBehaviour
         interact.performed += OnInteractionPerformed;
     }
 
-
-    //----------------ITEM AND MACHINE INTERACTION-----------------
-    [SerializeField] private float _interactionRadius;
-    private LayerMask _interactableObjectLayerMask;
-    private GameObject _interactableObject;
-    public Item _heldItem;
-    [SerializeField] private InputAction interact;
-
     private void Update()
     {
         FindInteractableObject();
-        if(_interactableObject != null)
-        {
-            Debug.Log("interactableObject set");
-        }
-        else
-        {
-            Debug.Log("no interactable object");
-        }
-        
     }
 
     private void FindInteractableObject()
@@ -46,13 +32,11 @@ public class Player : MonoBehaviour
         if (_heldItem != null)
         {
             _interactableObjectLayerMask = 1 << 6;
-            Debug.Log("Looking for machines");
         }
         // Otherwise, can only interact with items
         else
         {
             _interactableObjectLayerMask = 1 << 8;
-            Debug.Log("Looking for items");
         }
 
         // Check for interactable objects within radius
@@ -88,6 +72,14 @@ public class Player : MonoBehaviour
             Interactable interactable = _interactableObject.GetComponent<Interactable>();
             interactable.PlayerInteraction(this);
         }
+        else if(_heldItem != null)
+        {
+            float xPos = Mathf.Floor(_heldItem.transform.position.x) + 0.5f;
+            float yPos = Mathf.Floor(_heldItem.transform.position.y) + 0.5f;
+            _heldItem.transform.position = new Vector2(xPos, yPos);
+            _heldItem.gameObject.transform.parent = null;
+            _heldItem = null;
+        }
 
     }
 
@@ -99,6 +91,16 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         interact.Enable();
+    }
+
+    private void LightOnFire()
+    {
+
+    }
+
+    private void Freeze()
+    {
+
     }
 
     private void OnDrawGizmos()

@@ -52,8 +52,9 @@ MonoBehaviour:
   _currentHeat: 7
   _heatRate: 4
   _repairObjectArray:
-  - {fileID: 6761951510852570856, guid: da1755d4c7a5556499acaeb27771fd19, type: 3}
+  - {fileID: 6240306995394818766, guid: 282eab1c978ccb844840bb6a2e90d594, type: 3}
   - {fileID: 4090985416780928143, guid: 76bcd1f68fd99e74d94d1a12255c2f22, type: 3}
+  - {fileID: 6761951510852570856, guid: da1755d4c7a5556499acaeb27771fd19, type: 3}
 --- !u!61 &3343870080416630804
 BoxCollider2D:
   m_ObjectHideFlags: 0

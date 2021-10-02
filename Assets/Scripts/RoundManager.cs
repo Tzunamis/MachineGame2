@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
-    private static float _roundDuration = 30f; // How long is a round?
+    private static float _roundDuration; // How long is a round?
     private static float _roundTimer; // How far have we progressed into the current round?
+    public GameObject controlScriptGameObject;
 
     public static float RoundDuration
     {
@@ -43,6 +44,12 @@ public class RoundManager : MonoBehaviour
             }
             return _instance;
         }
+    }
+
+    private void Awake()
+    {
+        _roundDuration = controlScriptGameObject.GetComponent<ControlScript>().roundDuration;
+        Debug.Log("Round duration: " + _roundDuration);
     }
 
     private void Update()

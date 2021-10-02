@@ -7,9 +7,8 @@ public class Item : MonoBehaviour, Interactable
     
     public void PlayerInteraction(Player player)
     {
-        Debug.Log("Item interaction");
         transform.parent = player.transform;
-        transform.localPosition = new Vector3(0.25f, -0.25f, 0);
+        transform.localPosition = new Vector3(0.25f, 0.3f, 0);
         player._heldItem = this;
     }
 
