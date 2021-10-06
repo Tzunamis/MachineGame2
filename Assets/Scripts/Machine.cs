@@ -237,11 +237,10 @@ public class Machine : MonoBehaviour, Interactable
                         hitObject.SendMessage("LightOnFire");
                 }
 
-                // If it's a player, light them on fire and knock them back
+                // If it's a player, light them on fire
                 if(hitObject.layer == LayerMask.NameToLayer("Player"))
                 {
                     hitObject.SendMessage("LightOnFire");
-                    // ADD KNOCKBACK
                 }
 
             }

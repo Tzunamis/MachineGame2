@@ -10,6 +10,12 @@ public class ControlScript : MonoBehaviour
     [Header("Heat Rate")]
     public float minHeatRate;
     public float maxHeatRate;
+    [Header("Fire on Ground")]
+    public float minFireDurationFloor;
+    public float maxFireDurationFloor;
+    [Header("Fire on Player")]
+    public float minFireDurationPlayer;
+    public float maxFireDurationPlayer;
     [Header("Other")]
     public float roundDuration;
     public float productRate;

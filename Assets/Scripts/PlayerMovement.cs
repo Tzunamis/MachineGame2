@@ -18,49 +18,124 @@ public class PlayerMovement : MonoBehaviour
      */
 
     //----------------MOVEMENT-----------------------
-    [SerializeField] private InputAction movement;
+    [SerializeField] private InputAction _movement;
     
-    [SerializeField] private float speed;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _fireMultiplier;
 
+    private bool _movingUp = false;
+    private bool _movingDown = false;
+    private bool _movingLeft = false;
+    private bool _movingRight = false;
+
+    private bool _isOnFire = false;
+    
 
     private void Awake()
     {
         // TODO: set animator
-        movement.performed += OnMovementPerformed;
-        movement.canceled += OnMovementPerformed;
+        _movement.performed += OnMovementPerformed;
+        _movement.canceled += OnMovementPerformed;
 
     }
+
 
     private void FixedUpdate()
     {
 
         // Player control scripts go here
 
-        // Horizontal = 1: right input
-        // Horizontal = -1: left input
-
-        // Vertical = 1: up input
-        // Vertical = -1: down input
-
-
-        if (Horizontal == 1)
+        if(!_isOnFire)
         {
-            gameObject.transform.position += new Vector3(speed, 0, 0);
+            NormalMovement();
         }
-        else if (Horizontal == -1)
+
+        else
         {
-            gameObject.transform.position += new Vector3(-speed, 0, 0);
+            FireMovement();
         }
+        
+    }
+
+    private void NormalMovement()
+    {
+        // Need to make this more smooth
 
         if (Vertical == 1)
         {
-            gameObject.transform.position += new Vector3(0, speed, 0);
+            transform.position += new Vector3(0, _speed, 0);
         }
         else if (Vertical == -1)
         {
-            gameObject.transform.position += new Vector3(0, -speed, 0);
+            transform.position += new Vector3(0, -_speed, 0);
+        }
+
+        if (Horizontal == 1)
+        {
+            transform.position += new Vector3(_speed, 0, 0);
+        }
+        else if (Horizontal == -1)
+        {
+            transform.position += new Vector3(-_speed, 0, 0);
         }
     }
+
+    private void FireMovement()
+    {
+        // It's not pretty but it works
+
+        if (Vertical == 1)
+        {
+            _movingUp = true;
+            _movingDown = false;
+            _movingLeft = false;
+            _movingRight = false;
+        }
+        else if (Vertical == -1)
+        {
+            _movingDown = true;
+            _movingUp = false;
+            _movingLeft = false;
+            _movingRight = false;
+        }
+
+        if (Horizontal == 1)
+        {
+            _movingRight = true;
+            _movingLeft = false;
+            _movingUp = false;
+            _movingDown = false;
+        }
+        else if (Horizontal == -1)
+        {
+            _movingLeft = true;
+            _movingRight = false;
+            _movingUp = false;
+            _movingDown = false;
+        }
+
+
+        if (_movingUp)
+        {
+            transform.position += new Vector3(0, _speed * _fireMultiplier, 0);
+        }
+
+        if (_movingDown)
+        {
+            transform.position += new Vector3(0, -_speed * _fireMultiplier, 0);
+        }
+
+        if (_movingLeft)
+        {
+            transform.position += new Vector3(-_speed * _fireMultiplier, 0, 0);
+        }
+
+        if (_movingRight)
+        {
+            transform.position += new Vector3(_speed * _fireMultiplier, 0, 0);
+        }
+    }
+
 
     // Movement stuff below
     private void OnMovementPerformed(InputAction.CallbackContext context)
@@ -73,12 +148,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        movement.Disable();
+        _movement.Disable();
     }
 
     private void OnEnable()
     {
-        movement.Enable();
+        _movement.Enable();
+    }
+
+    // Fire stuff
+
+    public void LightOnFire()
+    {
+        _isOnFire = true;
+        // Set movement direction based on current movement
+    }
+
+    public void Extinguish()
+    {
+        _isOnFire = false;
     }
 
     private float Vertical { get; set; }
