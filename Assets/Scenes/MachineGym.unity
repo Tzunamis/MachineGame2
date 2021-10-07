@@ -2125,6 +2125,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: _controlScript
+      value: 
+      objectReference: {fileID: 1437803768}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: _movement.m_Id
       value: c70f586f-5905-487d-96d4-655c43e464f2
       objectReference: {fileID: 0}
@@ -4708,6 +4712,10 @@ PrefabInstance:
       propertyPath: _fireDuration
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: _controlScript
+      value: 
+      objectReference: {fileID: 1437803768}
     - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: _movement.m_Id
       value: c70f586f-5905-487d-96d4-655c43e464f2
@@ -7394,6 +7402,10 @@ MonoBehaviour:
   maxFireDurationFloor: 20
   minFireDurationPlayer: 5
   maxFireDurationPlayer: 10
+  minFreezeDuration: 10
+  maxFreezeDuration: 15
+  fireMultiplier: 0
+  freezeMultiplier: 0
   roundDuration: 30
   productRate: 4
   explosionRadius: 4

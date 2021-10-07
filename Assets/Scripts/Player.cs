@@ -143,16 +143,11 @@ public class Player : MonoBehaviour
 
     }
 
-    private void Extinguish()
+    public void Extinguish()
     {
         _isOnFire = false;
         _fireSprite.enabled = false;
         _movementScript.Extinguish();
-    }
-
-    private void Freeze()
-    {
-
     }
 
     private void OnDrawGizmos()

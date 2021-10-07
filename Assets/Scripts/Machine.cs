@@ -155,6 +155,7 @@ public class Machine : MonoBehaviour, Interactable
                 // slow down players
             case -3:
                 RequestRepair(_repairObjectArray[2]);
+                Implode();
                 break;
         }
     }
@@ -269,6 +270,12 @@ public class Machine : MonoBehaviour, Interactable
                 if (hitObject.layer == LayerMask.NameToLayer("Machine"))
                 {
                     hitObject.SendMessage("DecrementHeat");
+                }
+
+                // If it's a floor tile on fire, put out the fire
+                if (hitObject.layer == LayerMask.NameToLayer("Floor"))
+                {
+                    hitObject.SendMessage("ExtinguishFire");
                 }
 
                 // If it's a player, freeze them

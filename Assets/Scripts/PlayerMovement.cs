@@ -21,15 +21,27 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private InputAction _movement;
     
     [SerializeField] private float _speed;
-    [SerializeField] private float _fireMultiplier;
 
     private bool _movingUp = false;
     private bool _movingDown = false;
     private bool _movingLeft = false;
     private bool _movingRight = false;
 
+    //--------------FIRE AND ICE---------------------
+
+    private float _fireMultiplier;
+    private float _freezeMultiplier;
     private bool _isOnFire = false;
-    
+    private bool _isFrozen = false;
+
+    //--------------POINTERS----------------------------
+    [SerializeField] private SpriteRenderer _freezeSprite;
+    [SerializeField] private ControlScript _controlScript;
+
+    private float _freezeTimer;
+    private float _minimumFreezeDuration;
+    private float _maximumFreezeDuration;
+    private float _currentFreezeDuration;
 
     private void Awake()
     {
@@ -37,19 +49,46 @@ public class PlayerMovement : MonoBehaviour
         _movement.performed += OnMovementPerformed;
         _movement.canceled += OnMovementPerformed;
 
+        _minimumFreezeDuration = _controlScript.minFreezeDuration;
+        _maximumFreezeDuration = _controlScript.maxFreezeDuration;
+
+        _fireMultiplier = _controlScript.fireMultiplier;
+        _freezeMultiplier = _controlScript.freezeMultiplier;
+
+        _freezeSprite.enabled = false;
     }
 
+    private void Update()
+    {
+        if(_isFrozen)
+        {
+            _freezeTimer += Time.deltaTime;
+
+            if(_freezeTimer >= _currentFreezeDuration)
+            {
+                Thaw();
+            }
+        }
+        
+    }
 
     private void FixedUpdate()
     {
 
-        // Player control scripts go here
+        // Fire and ice cancel each other out
+        if(_isOnFire && _isFrozen)
+        {
+            Extinguish();
+            Thaw();
+            gameObject.GetComponent<Player>().Extinguish();
+        }
 
         if(!_isOnFire)
         {
             NormalMovement();
         }
 
+        // Fire has a different form of movement
         else
         {
             FireMovement();
@@ -59,24 +98,30 @@ public class PlayerMovement : MonoBehaviour
 
     private void NormalMovement()
     {
-        // Need to make this more smooth
+        // Need to make this more smooth (maybe choppyness is good when frozen though)
+
+        float spd = _speed;
+        if(_isFrozen)
+        {
+            spd = _speed * _freezeMultiplier;
+        }
 
         if (Vertical == 1)
         {
-            transform.position += new Vector3(0, _speed, 0);
+            transform.position += new Vector3(0, spd, 0);
         }
         else if (Vertical == -1)
         {
-            transform.position += new Vector3(0, -_speed, 0);
+            transform.position += new Vector3(0, -spd, 0);
         }
 
         if (Horizontal == 1)
         {
-            transform.position += new Vector3(_speed, 0, 0);
+            transform.position += new Vector3(spd, 0, 0);
         }
         else if (Horizontal == -1)
         {
-            transform.position += new Vector3(-_speed, 0, 0);
+            transform.position += new Vector3(-spd, 0, 0);
         }
     }
 
@@ -169,7 +214,31 @@ public class PlayerMovement : MonoBehaviour
         _isOnFire = false;
     }
 
+    public void Freeze()
+    {
+        _isFrozen = true;
+
+        _freezeTimer = 0;
+        _freezeSprite.enabled = true;
+
+        _currentFreezeDuration = Random.Range(_minimumFreezeDuration, _maximumFreezeDuration);
+    }
+
+    public void Thaw()
+    {
+        _isFrozen = false;
+        _freezeSprite.enabled = false;
+    }
+
     private float Vertical { get; set; }
 
     private float Horizontal { get; set; }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (_isFrozen && collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            collision.collider.gameObject.SendMessage("Freeze");
+        }
+    }
 }
