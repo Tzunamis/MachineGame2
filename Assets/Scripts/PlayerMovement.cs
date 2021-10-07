@@ -18,49 +18,169 @@ public class PlayerMovement : MonoBehaviour
      */
 
     //----------------MOVEMENT-----------------------
-    [SerializeField] private InputAction movement;
+    [SerializeField] private InputAction _movement;
     
-    [SerializeField] private float speed;
+    [SerializeField] private float _speed;
 
+    private bool _movingUp = false;
+    private bool _movingDown = false;
+    private bool _movingLeft = false;
+    private bool _movingRight = false;
+
+    //--------------FIRE AND ICE---------------------
+
+    private float _fireMultiplier;
+    private float _freezeMultiplier;
+    private bool _isOnFire = false;
+    private bool _isFrozen = false;
+
+    //--------------POINTERS----------------------------
+    [SerializeField] private SpriteRenderer _freezeSprite;
+    [SerializeField] private ControlScript _controlScript;
+
+    private float _freezeTimer;
+    private float _minimumFreezeDuration;
+    private float _maximumFreezeDuration;
+    private float _currentFreezeDuration;
 
     private void Awake()
     {
         // TODO: set animator
-        movement.performed += OnMovementPerformed;
-        movement.canceled += OnMovementPerformed;
+        _movement.performed += OnMovementPerformed;
+        _movement.canceled += OnMovementPerformed;
 
+        _minimumFreezeDuration = _controlScript.minFreezeDuration;
+        _maximumFreezeDuration = _controlScript.maxFreezeDuration;
+
+        _fireMultiplier = _controlScript.fireMultiplier;
+        _freezeMultiplier = _controlScript.freezeMultiplier;
+
+        _freezeSprite.enabled = false;
+    }
+
+    private void Update()
+    {
+        if(_isFrozen)
+        {
+            _freezeTimer += Time.deltaTime;
+
+            if(_freezeTimer >= _currentFreezeDuration)
+            {
+                Thaw();
+            }
+        }
+        
     }
 
     private void FixedUpdate()
     {
 
-        // Player control scripts go here
-
-        // Horizontal = 1: right input
-        // Horizontal = -1: left input
-
-        // Vertical = 1: up input
-        // Vertical = -1: down input
-
-
-        if (Horizontal == 1)
+        // Fire and ice cancel each other out
+        if(_isOnFire && _isFrozen)
         {
-            gameObject.transform.position += new Vector3(speed, 0, 0);
+            Extinguish();
+            Thaw();
+            gameObject.GetComponent<Player>().Extinguish();
         }
-        else if (Horizontal == -1)
+
+        if(!_isOnFire)
         {
-            gameObject.transform.position += new Vector3(-speed, 0, 0);
+            NormalMovement();
+        }
+
+        // Fire has a different form of movement
+        else
+        {
+            FireMovement();
+        }
+        
+    }
+
+    private void NormalMovement()
+    {
+        // Need to make this more smooth (maybe choppyness is good when frozen though)
+
+        float spd = _speed;
+        if(_isFrozen)
+        {
+            spd = _speed * _freezeMultiplier;
         }
 
         if (Vertical == 1)
         {
-            gameObject.transform.position += new Vector3(0, speed, 0);
+            transform.position += new Vector3(0, spd, 0);
         }
         else if (Vertical == -1)
         {
-            gameObject.transform.position += new Vector3(0, -speed, 0);
+            transform.position += new Vector3(0, -spd, 0);
+        }
+
+        if (Horizontal == 1)
+        {
+            transform.position += new Vector3(spd, 0, 0);
+        }
+        else if (Horizontal == -1)
+        {
+            transform.position += new Vector3(-spd, 0, 0);
         }
     }
+
+    private void FireMovement()
+    {
+        // It's not pretty but it works
+
+        if (Vertical == 1)
+        {
+            _movingUp = true;
+            _movingDown = false;
+            _movingLeft = false;
+            _movingRight = false;
+        }
+        else if (Vertical == -1)
+        {
+            _movingDown = true;
+            _movingUp = false;
+            _movingLeft = false;
+            _movingRight = false;
+        }
+
+        if (Horizontal == 1)
+        {
+            _movingRight = true;
+            _movingLeft = false;
+            _movingUp = false;
+            _movingDown = false;
+        }
+        else if (Horizontal == -1)
+        {
+            _movingLeft = true;
+            _movingRight = false;
+            _movingUp = false;
+            _movingDown = false;
+        }
+
+
+        if (_movingUp)
+        {
+            transform.position += new Vector3(0, _speed * _fireMultiplier, 0);
+        }
+
+        if (_movingDown)
+        {
+            transform.position += new Vector3(0, -_speed * _fireMultiplier, 0);
+        }
+
+        if (_movingLeft)
+        {
+            transform.position += new Vector3(-_speed * _fireMultiplier, 0, 0);
+        }
+
+        if (_movingRight)
+        {
+            transform.position += new Vector3(_speed * _fireMultiplier, 0, 0);
+        }
+    }
+
 
     // Movement stuff below
     private void OnMovementPerformed(InputAction.CallbackContext context)
@@ -73,15 +193,52 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        movement.Disable();
+        _movement.Disable();
     }
 
     private void OnEnable()
     {
-        movement.Enable();
+        _movement.Enable();
+    }
+
+    // Fire stuff
+
+    public void LightOnFire()
+    {
+        _isOnFire = true;
+        // Set movement direction based on current movement
+    }
+
+    public void Extinguish()
+    {
+        _isOnFire = false;
+    }
+
+    public void Freeze()
+    {
+        _isFrozen = true;
+
+        _freezeTimer = 0;
+        _freezeSprite.enabled = true;
+
+        _currentFreezeDuration = Random.Range(_minimumFreezeDuration, _maximumFreezeDuration);
+    }
+
+    public void Thaw()
+    {
+        _isFrozen = false;
+        _freezeSprite.enabled = false;
     }
 
     private float Vertical { get; set; }
 
     private float Horizontal { get; set; }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (_isFrozen && collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            collision.collider.gameObject.SendMessage("Freeze");
+        }
+    }
 }
