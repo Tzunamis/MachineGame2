@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.754717, g: 0.7369171, b: 0.7369171, a: 1}
+  m_Color: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7dc8b2be65468d4e97353cae01c94b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _controlScript: {fileID: 0}
   _fireSprite: {fileID: 7193059658641711835}
   _fireTriggerZone: {fileID: 3225148227239267709}
 --- !u!61 &7193059658106672595

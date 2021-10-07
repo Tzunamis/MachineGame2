@@ -19,6 +19,7 @@ public class Floor : MonoBehaviour
 
     private void Awake()
     {
+        
         _isOnFire = false;
         _fireSprite.color = GetComponent<SpriteRenderer>().color;
         _fireTriggerZone.enabled = false;
