@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 2616648794316903837}
   - component: {fileID: 5526202525149857448}
   - component: {fileID: 7192705347477786753}
+  - component: {fileID: 7432253138929240868}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -165,8 +166,6 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
   _speed: 0.2
-  _fireMultiplier: 1.5
-  _freezeMultiplier: 0.5
   _freezeSprite: {fileID: 4234664175854606338}
   _controlScript: {fileID: 0}
 --- !u!50 &2616648794316903837
@@ -257,6 +256,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7432253138929240868
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427546482797927495}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9d6441844b928444ebad0daadc1b1bc8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7198797527122479004
 GameObject:
   m_ObjectHideFlags: 0
