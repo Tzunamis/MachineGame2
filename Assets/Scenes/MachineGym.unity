@@ -4634,23 +4634,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5137331703946279416, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5388864
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5137331703946279416, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5388864
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5137331703946279416, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3.0777729
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5137331703946279416, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.55
+      value: -4.21
       objectReference: {fileID: 0}
     - target: {fileID: 5137331703946279416, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.89
+      value: -1.98
       objectReference: {fileID: 0}
     - target: {fileID: 5137331703946279416, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7404,8 +7404,8 @@ MonoBehaviour:
   maxFireDurationPlayer: 10
   minFreezeDuration: 10
   maxFreezeDuration: 15
-  fireMultiplier: 0
-  freezeMultiplier: 0
+  fireMultiplier: 1.5
+  freezeMultiplier: 0.5
   roundDuration: 30
   productRate: 4
   explosionRadius: 4

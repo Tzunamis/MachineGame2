@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float _interactionRadius;
     private LayerMask _interactableObjectLayerMask;
     private GameObject _interactableObject;
+    private GameObject _previousInteractableObject;
     public Item _heldItem;
     [SerializeField] private InputAction interact;
 
@@ -51,6 +52,8 @@ public class Player : MonoBehaviour
 
     private void FindInteractableObject()
     {
+        _interactableObject = _previousInteractableObject;
+
         // Set interactable objects based on whether the player is holding an item
         // If holding item, can only interact with machines
         if (_heldItem != null)
@@ -87,6 +90,27 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        // Manage glow
+        /*
+        Debug.Log(_interactableObject);
+        if(_interactableObject != _previousInteractableObject)
+        {
+            //_previousInteractableObject.SendMessage("StopGlowing");
+
+            Debug.Log("different item");
+
+            
+            if(_interactableObject != null)
+            {
+                _interactableObject.SendMessage("StartGlowing");
+            }
+            
+        }
+        else
+            Debug.Log("same item");
+        */
+
     }
 
     private void OnInteractionPerformed(InputAction.CallbackContext context)
