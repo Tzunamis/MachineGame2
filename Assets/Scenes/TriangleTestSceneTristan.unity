@@ -23811,7 +23811,7 @@ GameObject:
   - component: {fileID: 565518225}
   - component: {fileID: 565518227}
   - component: {fileID: 565518226}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: GearMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38340,7 +38340,7 @@ GameObject:
   - component: {fileID: 850137941}
   - component: {fileID: 850137943}
   - component: {fileID: 850137942}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: PipeMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94229,7 +94229,7 @@ GameObject:
   - component: {fileID: 2043238347812515146}
   - component: {fileID: 2043238347812515147}
   - component: {fileID: 4691261436060979515}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: LightbulbMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
