@@ -46,11 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a43a5e99b9020d44ab6af86399134e84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlScriptGameObject: {fileID: 0}
   product: {fileID: 0}
   _productRate: 0
   _productProgress: 0
   _currentHeat: 7
   _heatRate: 4
+  _itemHeatIncrement: 0
   _repairObjectArray:
   - {fileID: 6240306995394818766, guid: 282eab1c978ccb844840bb6a2e90d594, type: 3}
   - {fileID: 4090985416780928143, guid: 76bcd1f68fd99e74d94d1a12255c2f22, type: 3}
@@ -107,7 +109,7 @@ Transform:
   m_GameObject: {fileID: 8297441439422950143}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3841, y: 1.3841, z: 1.3841}
   m_Children: []
   m_Father: {fileID: 8297441440676764151}
   m_RootOrder: 1

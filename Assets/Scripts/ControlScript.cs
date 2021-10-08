@@ -13,6 +13,7 @@ public class ControlScript : MonoBehaviour
     [Header("Fire on Ground")]
     public float minFireDurationFloor;
     public float maxFireDurationFloor;
+    public float fireProbability;
     [Header("Fire on Player")]
     public float minFireDurationPlayer;
     public float maxFireDurationPlayer;
