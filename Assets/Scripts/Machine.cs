@@ -72,6 +72,12 @@ public class Machine : MonoBehaviour, Interactable
         // Set ice probability
         _iceChance = controlScript.iceProbability;
 
+        // If producing items, set heat rate to 0
+        if(gameObject.layer == LayerMask.NameToLayer("ProductionMachine"))
+        {
+            _heatRate = 0;
+        }
+
         // ----------HEAT INDICATOR------------
         // Find heat indicator
         _heatIndicator = transform.Find("MachineSprite").transform.Find("HeatIndicator").GetComponent<SpriteRenderer>();
