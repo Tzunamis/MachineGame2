@@ -43,6 +43,10 @@ public class PlayerMovement : MonoBehaviour
     private float _maximumFreezeDuration;
     private float _currentFreezeDuration;
 
+    //--------------ANIMATOR----------------------------
+    Animator animator; 
+    SpriteRenderer spriteRenderer; 
+
     private void Awake()
     {
         // TODO: set animator
@@ -56,6 +60,9 @@ public class PlayerMovement : MonoBehaviour
         _freezeMultiplier = _controlScript.freezeMultiplier;
 
         _freezeSprite.enabled = false;
+
+        animator = gameObject.GetComponent<Animator>();
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -234,17 +241,22 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Vertical == 0 && Horizontal == 0)
         {
-            // idle animation
+            animator.SetBool("isWalking", false);
         }
         else
         {
-            // walk animation
-            if(Horizontal < 0)
+            animator.SetBool("isWalking", true);
+            if (Horizontal < 0)
             {
-                // flip sprite
+                spriteRenderer.flipX = true;
+            }
+            else if (Horizontal >= 0)
+            {
+                spriteRenderer.flipX = false;
             }
         }
     }
+
 
 
     /*
