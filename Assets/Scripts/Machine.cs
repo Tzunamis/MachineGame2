@@ -37,6 +37,7 @@ public class Machine : MonoBehaviour, Interactable
     //-----------------EXPLOSION PARAMETERS-------------------------
     private float _explosionRadius; // Radius of machine's explosion
     private float _fireChance; // Likelyhood of an object catching fire in an explosion
+    private float _iceChance; // LIkelyhood of freeze during implosion
     private float _explosionHeatShift = 1; // How much does an explosion affect the heat of nearby machines?
     private bool _isBroken;
 
@@ -68,6 +69,8 @@ public class Machine : MonoBehaviour, Interactable
         _itemHeatIncrement = controlScript.itemHeatIncrement;
         // Set fire probability
         _fireChance = controlScript.fireProbability;
+        // Set ice probability
+        _iceChance = controlScript.iceProbability;
 
         // ----------HEAT INDICATOR------------
         // Find heat indicator
@@ -277,7 +280,8 @@ public class Machine : MonoBehaviour, Interactable
                 // If it's a floor tile on fire, put out the fire
                 if (hitObject.layer == LayerMask.NameToLayer("Floor"))
                 {
-                    hitObject.SendMessage("ExtinguishFire");
+                    if (Random.value <= _iceChance)
+                        hitObject.SendMessage("Freeze");
                 }
 
                 // If it's a player, freeze them

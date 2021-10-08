@@ -156,6 +156,8 @@ public class Player : MonoBehaviour
         _fireTimer = 0;
         _fireSprite.enabled = true;
 
+        Debug.Log("Set on fire");
+
         _currentFireDuration = Random.Range(_minimumFireDuration, _maximumFireDuration);
 
         if (_heldItem != null)
@@ -181,9 +183,21 @@ public class Player : MonoBehaviour
 
     private void OnTriggerStay2D (Collider2D collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Fire"))
+        GameObject TriggerObject = collision.gameObject;
+
+        if (TriggerObject.layer == LayerMask.NameToLayer("FireIce"))
         {
-            LightOnFire();
+            Floor floorScript = TriggerObject.transform.parent.GetComponent<Floor>();
+            if(floorScript.IsOnFire)
+            {
+                LightOnFire();
+            }
+            if(floorScript.IsFrozen)
+            {
+                _movementScript.Freeze();
+            }
+            
+
         }
     }
 
