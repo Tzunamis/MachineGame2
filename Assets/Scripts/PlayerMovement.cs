@@ -69,7 +69,8 @@ public class PlayerMovement : MonoBehaviour
                 Thaw();
             }
         }
-        
+
+        ManageAnimator();
     }
 
     private void FixedUpdate()
@@ -227,4 +228,40 @@ public class PlayerMovement : MonoBehaviour
             collision.collider.gameObject.SendMessage("Freeze");
         }
     }
+
+
+    private void ManageAnimator()
+    {
+        if (Vertical == 0 && Horizontal == 0)
+        {
+            // idle animation
+        }
+        else
+        {
+            // walk animation
+            if(Horizontal < 0)
+            {
+                // flip sprite
+            }
+        }
+    }
+
+
+    /*
+     * if (Vertical > 0)
+     *      move up
+     * 
+     * 
+     * if (Vertical < 0)
+     *     move down
+     *     
+     *     
+     * if (Horizontal > 0)
+     *     move right
+     *     
+     *     
+     * if (Horizontal < 0)
+     *     move left
+     */
+
 }

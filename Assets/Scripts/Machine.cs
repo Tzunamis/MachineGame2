@@ -36,7 +36,7 @@ public class Machine : MonoBehaviour, Interactable
 
     //-----------------EXPLOSION PARAMETERS-------------------------
     private float _explosionRadius; // Radius of machine's explosion
-    private float _fireChance = 0.5f; // Likelyhood of an object catching fire in an explosion
+    private float _fireChance; // Likelyhood of an object catching fire in an explosion
     private float _explosionHeatShift = 1; // How much does an explosion affect the heat of nearby machines?
     private bool _isBroken;
 
@@ -66,6 +66,8 @@ public class Machine : MonoBehaviour, Interactable
         _explosionRadius = controlScript.explosionRadius;
         // Set item heat increment
         _itemHeatIncrement = controlScript.itemHeatIncrement;
+        // Set fire probability
+        _fireChance = controlScript.fireProbability;
 
         // ----------HEAT INDICATOR------------
         // Find heat indicator
@@ -187,7 +189,7 @@ public class Machine : MonoBehaviour, Interactable
     {
         if (product != null)
         {
-            Instantiate(product, transform.position + -transform.up, Quaternion.identity, transform);
+            Instantiate(product, transform.position + -transform.up * transform.localScale.x, Quaternion.identity, transform);
         }
         _productProgress = 0;
     }
