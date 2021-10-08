@@ -98,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void NormalMovement()
     {
-        // Need to make this more smooth (maybe choppyness is good when frozen though)
+        
 
         float spd = _speed;
         if(_isFrozen)
@@ -106,23 +106,9 @@ public class PlayerMovement : MonoBehaviour
             spd = _speed * _freezeMultiplier;
         }
 
-        if (Vertical == 1)
-        {
-            transform.position += new Vector3(0, spd, 0);
-        }
-        else if (Vertical == -1)
-        {
-            transform.position += new Vector3(0, -spd, 0);
-        }
+        transform.position += new Vector3(0, spd * Vertical, 0);
+        transform.position += new Vector3(spd * Horizontal, 0, 0);
 
-        if (Horizontal == 1)
-        {
-            transform.position += new Vector3(spd, 0, 0);
-        }
-        else if (Horizontal == -1)
-        {
-            transform.position += new Vector3(-spd, 0, 0);
-        }
     }
 
     private void FireMovement()

@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
         }
 
         // Check for interactable objects within radius
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _interactionRadius, _interactableObjectLayerMask);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position + new Vector3(0, 0.5f * transform.localScale.y), _interactionRadius, _interactableObjectLayerMask);
 
 
         if (hitColliders.Length == 0)
@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, _interactionRadius);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, 0.5f * transform.localScale.y), _interactionRadius);
     }
 
     private void OnTriggerStay2D (Collider2D collision)
