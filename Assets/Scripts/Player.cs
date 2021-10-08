@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -48,6 +49,8 @@ public class Player : MonoBehaviour
                 Extinguish();
             }
         }
+
+        openMenu();
     }
 
     private void FindInteractableObject()
@@ -206,6 +209,20 @@ public class Player : MonoBehaviour
         if(_isOnFire && collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             collision.collider.gameObject.SendMessage("LightOnFire");
+        }
+    }
+
+    private void openMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            var lastSceneIndex = SceneManager.sceneCount - 1;
+            var lastLoadedScene = SceneManager.GetSceneAt(lastSceneIndex);
+
+            SceneManager.LoadScene("StartMenu");
+            SceneManager.UnloadSceneAsync(lastLoadedScene);
+            //SceneManager.UnloadSceneAsync("TriangleTestScene");
+            //SceneManager.UnloadSceneAsync("TriangleTestSceneTristan");
         }
     }
 }
