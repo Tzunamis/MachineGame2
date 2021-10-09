@@ -20512,7 +20512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minStartingHeat: -0.75
   maxStartingHeat: 0.75
-  minHeatRate: 0.5
+  minHeatRate: 0.75
   maxHeatRate: 1
   minFireDurationFloor: 3
   maxFireDurationFloor: 10
