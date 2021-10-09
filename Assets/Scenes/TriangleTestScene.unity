@@ -20225,14 +20225,14 @@ MonoBehaviour:
   maxStartingHeat: 1
   minHeatRate: 0.5
   maxHeatRate: 1
-  minFireDurationFloor: 10
-  maxFireDurationFloor: 20
-  fireProbability: 0
+  minFireDurationFloor: 5
+  maxFireDurationFloor: 10
+  fireProbability: 0.3
   minFireDurationPlayer: 5
   maxFireDurationPlayer: 10
-  minIceDurationFloor: 0
-  maxIceDurationFloor: 0
-  iceProbability: 0
+  minIceDurationFloor: 5
+  maxIceDurationFloor: 10
+  iceProbability: 0.3
   minFreezeDuration: 10
   maxFreezeDuration: 15
   fireMultiplier: 1.5
@@ -22205,8 +22205,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 530684025}
   m_LocalRotation: {x: 0, y: 0, z: 0.27144036, w: 0.9624553}
-  m_LocalPosition: {x: -4.98, y: -0.048, z: 0}
-  m_LocalScale: {x: 5.7105126, y: 0.19832703, z: 0.15071589}
+  m_LocalPosition: {x: -5.01, y: -0.06, z: 0}
+  m_LocalScale: {x: 5.8692646, y: 0.19832703, z: 0.15071589}
   m_Children: []
   m_Father: {fileID: 2096214138}
   m_RootOrder: 0
@@ -31063,8 +31063,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 691880029}
   m_LocalRotation: {x: 0, y: 0, z: -0.26513544, w: 0.96421117}
-  m_LocalPosition: {x: -0.084, y: 0.017, z: 0}
-  m_LocalScale: {x: 5.7105126, y: 0.19832703, z: 0.15071589}
+  m_LocalPosition: {x: 0, y: -0.03, z: 0}
+  m_LocalScale: {x: 5.906383, y: 0.19832703, z: 0.15071589}
   m_Children: []
   m_Father: {fileID: 2096214138}
   m_RootOrder: 1
@@ -40774,8 +40774,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930060750}
   m_LocalRotation: {x: -0, y: -0, z: -0.96536994, w: 0.26088485}
-  m_LocalPosition: {x: -0.015, y: -3.038, z: 0}
-  m_LocalScale: {x: 6.188482, y: 0.28805014, z: 0.15071587}
+  m_LocalPosition: {x: 0.01, y: -3.03, z: 0}
+  m_LocalScale: {x: 6.0641847, y: 0.28805014, z: 0.15071587}
   m_Children: []
   m_Father: {fileID: 1728475189}
   m_RootOrder: 1
