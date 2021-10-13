@@ -46,6 +46,10 @@ public class Machine : MonoBehaviour, Interactable
     [SerializeField]
     private GameObject[] _repairObjectArray; // List of objects the machine might request for repair
 
+    //-----------------TEAM ASSIGNMENT PARAMETERS---------------------
+    [SerializeField]
+    public RoundManager.TeamList teamID; // Which team does this machine belong to?
+
     private void Awake()
     {
         _isBroken = false;

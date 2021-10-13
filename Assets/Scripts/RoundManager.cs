@@ -6,11 +6,27 @@ public class RoundManager : MonoBehaviour
 {
     private static float _roundDuration; // How long is a round?
     private static float _roundTimer; // How far have we progressed into the current round?
-    public GameObject controlScriptGameObject;
-
     private bool _isRoundStarted = false;
+    public static float RoundDuration
+    {
+        get
+        {
+            return _roundDuration;
+        }
 
+    }
+    public static float RoundTimer
+    {
+        get
+        {
+            return _roundTimer;
+        }
+
+    }
+
+    public ControlScript controlScript;
     public Spawner[] spawners;
+    public GameObject[] machineParents;
 
     public enum TeamList
     {
@@ -21,41 +37,27 @@ public class RoundManager : MonoBehaviour
     }
 
     public int numberTeams = 4;
-    public int totalNumPlayersPerTeam = 4;
+    public int numPlayersPerTeam = 4;
+    public int numMachinesPerTeam = 20;
 
     public struct TeamData
     {
-        public TeamData(int initialScore, GameObject[] initialPlayerList)
+        public TeamData(int initialScore, GameObject[] initialPlayerList, Machine[] initialMachineList)
         {
             score = initialScore;
             playerList = initialPlayerList;
+            machineList = initialMachineList;
             playerIDToSpawn = 0;
         }
 
         public int score;
         public GameObject[] playerList;
+        public Machine[] machineList;
         public int playerIDToSpawn;
     }
 
     public Dictionary<TeamList, TeamData> Teams;
 
-    public static float RoundDuration
-    {
-        get
-        {
-            return _roundDuration;
-        }
-            
-    }
-
-    public static float RoundTimer
-    {
-        get
-        {
-            return _roundTimer;
-        }
-
-    }
 
     // Singleton pattern
     private static RoundManager _instance;
@@ -79,14 +81,12 @@ public class RoundManager : MonoBehaviour
 
     private void Awake()
     {
-        //_roundDuration = controlScriptGameObject.GetComponent<ControlScript>().roundDuration;
-        Debug.Log("Round duration: " + _roundDuration);
-
         
         InitializeTeams();
 
         InitializeRound();
 
+        _roundDuration = controlScript.roundDuration;
         _isRoundStarted = true;
     }
 
@@ -94,11 +94,46 @@ public class RoundManager : MonoBehaviour
     {
         Teams = new Dictionary<TeamList, TeamData>();
 
-        for(int i = 0; i < numberTeams; i++)
+        // Assign machines to teams
+            // For this to work, all machines need to be children of "machineParent" objects which are linked in the inspector
+        
+        // Makes one list of machines for each team
+        List<Machine>[] machines = new List<Machine>[numberTeams];
+
+        foreach (GameObject machineParent in machineParents)
+        {
+            // Iterate through machine parent to find machines
+            for(int i = 0; i < transform.childCount; i++)
+            {
+                Machine machineToBeStored = machineParent.transform.GetChild(i).GetComponent<Machine>();
+                // Add machine to correct list based on machine's teamID
+                machines[(int)machineToBeStored.teamID].Add(machineToBeStored);
+            }
+        }
+
+        //for(int i = 0; i < machines.Length; i++)
+        //{
+        //    Teams[(TeamList)i].machineList
+        //    machineList.ToArray;
+        //}
+
+         
+
+
+
+        for (int i = 0; i < numberTeams; i++)
         {
             //Create player gaemobject instantiate them and place them in a gameobject array to be placed on the line under
-            //Teams[(TeamList)i] = new TeamData(0, /*List of player gameobjects*/);
+            for(int j = 0; j < numPlayersPerTeam; j++)
+            {
+
+            }
+
+            //Teams[(TeamList)i] = new TeamData(0, /*List of player gameobjects*/, /*List of machines*/);
         }
+
+
+       
     }
 
     private void InitializeRound()
@@ -111,7 +146,7 @@ public class RoundManager : MonoBehaviour
 
             //Place & Activate player
 
-            currentTeam.playerIDToSpawn = (currentTeam.playerIDToSpawn >= totalNumPlayersPerTeam) ? 0 : currentTeam.playerIDToSpawn++;
+            currentTeam.playerIDToSpawn = (currentTeam.playerIDToSpawn >= numPlayersPerTeam) ? 0 : currentTeam.playerIDToSpawn++;
 
             if (currentSpawner.cycleTeams)
             {
