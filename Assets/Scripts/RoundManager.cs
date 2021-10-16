@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RoundManager : MonoBehaviour
 {
@@ -26,7 +27,10 @@ public class RoundManager : MonoBehaviour
 
     public ControlScript controlScript;
     public Spawner[] spawners;
+    public GameObject playerPrefab;
     public GameObject[] machineParents;
+
+    [SerializeField] private InputActionReference interact = null;
 
     public enum TeamList
     {
@@ -81,7 +85,8 @@ public class RoundManager : MonoBehaviour
 
     private void Awake()
     {
-        
+        Teams = new Dictionary<TeamList, TeamData>();
+
         InitializeTeams();
 
         InitializeRound();
@@ -92,13 +97,16 @@ public class RoundManager : MonoBehaviour
 
     private void InitializeTeams()
     {
-        Teams = new Dictionary<TeamList, TeamData>();
-
         // Assign machines to teams
             // For this to work, all machines need to be children of "machineParent" objects which are linked in the inspector
         
         // Makes one list of machines for each team
         List<Machine>[] machines = new List<Machine>[numberTeams];
+
+        for(int i = 0; i < numberTeams; i++)
+        {
+            machines[i] = new List<Machine>();
+        }
 
         foreach (GameObject machineParent in machineParents)
         {
@@ -111,43 +119,87 @@ public class RoundManager : MonoBehaviour
             }
         }
 
-        //for(int i = 0; i < machines.Length; i++)
-        //{
-        //    Teams[(TeamList)i].machineList
-        //    machineList.ToArray;
-        //}
-
-         
-
-
-
         for (int i = 0; i < numberTeams; i++)
         {
-            //Create player gaemobject instantiate them and place them in a gameobject array to be placed on the line under
-            for(int j = 0; j < numPlayersPerTeam; j++)
-            {
+            GameObject[] playersOnThisTeam = new GameObject[numPlayersPerTeam];
 
+            //Create player gameobject instantiate them and place them in a gameobject array to be placed on the line under
+            for (int j = 0; j < numPlayersPerTeam; j++)
+            {
+                GameObject playerToInstantiate = playerPrefab;
+                // Anything else we need to do to players can happen here
+                //players[i, j] = playerToInstantiate;
+                playersOnThisTeam[j] = playerToInstantiate;
             }
 
-            //Teams[(TeamList)i] = new TeamData(0, /*List of player gameobjects*/, /*List of machines*/);
+            // Create team dictionary
+            Teams.Add((TeamList)i, new TeamData(0, playersOnThisTeam, machines[i].ToArray()));
         }
 
-
-       
     }
 
     private void InitializeRound()
     {
         //Kill any players existing / disable them (have a reference in TeamData)
+        
         //Instantiate players
+
         foreach(Spawner currentSpawner in spawners)
         {
             TeamData currentTeam = Teams[currentSpawner.teamSpawnType];
 
+            GameObject playerToSpawn = currentTeam.playerList[currentTeam.playerIDToSpawn];
+            // Set player scale according to controlscript
+            float playerScale = controlScript.playerScale;
+            playerToSpawn.transform.localScale = new Vector3(playerScale, playerScale, 1);
+            
+
+            // Set controls
+            //InputAction[] currentPlayerControls = SetPlayerControls(currentTeam.playerIDToSpawn);
+
+            switch (currentTeam.playerIDToSpawn)
+            {
+                case 0:
+                    Debug.Log("Setting p1 controls");
+                    playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/tab");
+                    //playerToSpawn.GetComponent<PlayerMovement>().movement.ChangeBindingWithGroup("Key.W");
+                    break;
+                case 1:
+                    Debug.Log("Setting p2 controls");
+                    playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/enter");
+                    break;
+                case 2:
+                    Debug.Log("Setting p3 controls");
+                    playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/space");
+                    break;
+                case 3:
+                    Debug.Log("Setting p4 controls");
+                    break;
+            }
+
             //Place & Activate player
+            Instantiate(playerToSpawn, currentSpawner.transform.position, Quaternion.Euler(0, 0, currentSpawner.spawnRotation));
 
-            currentTeam.playerIDToSpawn = (currentTeam.playerIDToSpawn >= numPlayersPerTeam) ? 0 : currentTeam.playerIDToSpawn++;
+            // Set active players
+            // Maybe according to spawner?
 
+            //Swap player to spawn
+                
+                //Didn't work: currentTeam.playerIDToSpawn = (currentTeam.playerIDToSpawn >= numPlayersPerTeam) ? currentTeam.playerIDToSpawn++ : 0;
+
+            if (currentTeam.playerIDToSpawn >= numPlayersPerTeam - 1)
+            {
+                currentTeam.playerIDToSpawn = 0;
+            }
+            else
+            {
+                currentTeam.playerIDToSpawn++;
+            }
+
+
+            Teams[currentSpawner.teamSpawnType] = currentTeam;
+
+            // Cycle spawners if needed
             if (currentSpawner.cycleTeams)
             {
                 switch (currentSpawner.teamSpawnType)
@@ -167,16 +219,23 @@ public class RoundManager : MonoBehaviour
                 }
             }
         }
-        //Set _isRoundStarted
-        //Cycle team spawner ID
-        //Cycle current player to spawn
     }
 
     private void Update()
     {
         if (_isRoundStarted)
         {
-            _roundTimer += Time.deltaTime;
+            ManageRoundTimer();
+        }
+    }
+
+    private void ManageRoundTimer()
+    {
+        _roundTimer += Time.deltaTime;
+        if(_roundTimer >= RoundDuration)
+        {
+            //End of round stuff
+            _roundTimer = 0;
         }
     }
 

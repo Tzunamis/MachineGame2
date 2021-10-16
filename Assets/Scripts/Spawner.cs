@@ -7,4 +7,5 @@ public class Spawner : MonoBehaviour
     public RoundManager.TeamList teamSpawnType;
 
     public bool cycleTeams = true;
+    public float spawnRotation = 0;
 }

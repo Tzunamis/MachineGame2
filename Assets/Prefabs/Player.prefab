@@ -113,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 6427546482797927495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 161137751773841649}
   - {fileID: 3452340294532184595}
@@ -138,12 +138,19 @@ MonoBehaviour:
     m_Name: Interact
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 7254b1bc-44c1-4a03-adb7-05b1f49da46a
+    m_Id: ffaeebdb-11ec-4c40-bec2-bd3d1eb559a6
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: c18ae93e-5e53-4eb0-8b79-e27bdcda8787
+      m_Path: 
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Interact
+      m_Flags: 0
   _movementScript: {fileID: 6964228607516325894}
-  _controlScript: {fileID: 0}
   _fireSprite: {fileID: 2480569326910217340}
 --- !u!114 &6964228607516325894
 MonoBehaviour:
@@ -157,14 +164,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91c7ce8314f18a4d84308aafa939383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movement:
+  movement:
     m_Name: Movement
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: f136067f-00b5-468e-bb34-af927d2b5378
+    m_Id: 9288a44a-e940-4d89-ba96-d70e596d682d
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 2D Vector
+      m_Id: 79bd900d-1a6f-4897-b729-10efed12edc7
+      m_Path: 2DVector
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement
+      m_Flags: 4
+    - m_Name: up
+      m_Id: 58857449-dc8e-4162-8764-7773e79e1e19
+      m_Path: 
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement
+      m_Flags: 8
+    - m_Name: down
+      m_Id: b1c8517f-abbe-4b79-8119-5aa1e01bb94b
+      m_Path: 
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement
+      m_Flags: 8
+    - m_Name: left
+      m_Id: 96a12f69-01f9-4538-b57e-e11523ce146e
+      m_Path: 
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement
+      m_Flags: 8
+    - m_Name: right
+      m_Id: ca0a30cb-0b6b-4c78-80fe-b38e8858cf61
+      m_Path: 
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement
+      m_Flags: 8
   _speed: 0.2
   _freezeSprite: {fileID: 4234664175854606338}
   _controlScript: {fileID: 0}
@@ -188,7 +235,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!70 &5526202525149857448
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
