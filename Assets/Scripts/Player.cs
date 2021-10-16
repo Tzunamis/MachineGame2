@@ -118,7 +118,6 @@ public class Player : MonoBehaviour
 
     private void OnInteractionPerformed(InputAction.CallbackContext context)
     {
-
         if(!_isOnFire) // Can't use items while you're on fire
         {
             if (_interactableObject != null)
