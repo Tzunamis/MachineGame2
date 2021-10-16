@@ -32,6 +32,6 @@ public class ControlScript : MonoBehaviour
     public float productRate;
     public float explosionRadius;
     public float itemHeatIncrement;
-
+    public float playerScale;
 
 }

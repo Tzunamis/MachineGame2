@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
      */
 
     //----------------MOVEMENT-----------------------
-    [SerializeField] private InputAction _movement;
+    public InputAction movement;
     
     [SerializeField] private float _speed;
 
@@ -49,9 +49,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        _controlScript = FindObjectOfType<ControlScript>().GetComponent<ControlScript>();
+
         // TODO: set animator
-        _movement.performed += OnMovementPerformed;
-        _movement.canceled += OnMovementPerformed;
+        movement.performed += OnMovementPerformed;
+        movement.canceled += OnMovementPerformed;
 
         _minimumFreezeDuration = _controlScript.minFreezeDuration;
         _maximumFreezeDuration = _controlScript.maxFreezeDuration;
@@ -114,8 +116,8 @@ public class PlayerMovement : MonoBehaviour
             spd = _speed * _freezeMultiplier;
         }
 
-        transform.position += new Vector3(0, spd * Vertical, 0);
-        transform.position += new Vector3(spd * Horizontal, 0, 0);
+        transform.position += transform.up * spd * Vertical;
+        transform.position += transform.right * spd * Horizontal;
 
     }
 
@@ -156,22 +158,22 @@ public class PlayerMovement : MonoBehaviour
 
         if (_movingUp)
         {
-            transform.position += new Vector3(0, _speed * _fireMultiplier, 0);
+            transform.position += transform.up * _speed * _fireMultiplier;
         }
 
         if (_movingDown)
         {
-            transform.position += new Vector3(0, -_speed * _fireMultiplier, 0);
+            transform.position -= transform.up * _speed * _fireMultiplier;
         }
 
         if (_movingLeft)
         {
-            transform.position += new Vector3(-_speed * _fireMultiplier, 0, 0);
+            transform.position -= transform.right * _speed * _fireMultiplier;
         }
 
         if (_movingRight)
         {
-            transform.position += new Vector3(_speed * _fireMultiplier, 0, 0);
+            transform.position += transform.right * _speed * _fireMultiplier;
         }
     }
 
@@ -187,12 +189,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        _movement.Disable();
+        movement.Disable();
     }
 
     private void OnEnable()
     {
-        _movement.Enable();
+        movement.Enable();
     }
 
     // Fire stuff

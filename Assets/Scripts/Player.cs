@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -13,7 +11,7 @@ public class Player : MonoBehaviour
     private GameObject _interactableObject;
     private GameObject _previousInteractableObject;
     public Item _heldItem;
-    [SerializeField] private InputAction interact;
+    public InputAction interact;
 
     //----------------FIRE STUFF------------------------------
     private bool _isOnFire;
@@ -24,17 +22,19 @@ public class Player : MonoBehaviour
 
     //-----------------POINTERS ------------------
     [SerializeField] private PlayerMovement _movementScript;
-    [SerializeField] private ControlScript _controlScript;
     [SerializeField] private SpriteRenderer _fireSprite;
+    private ControlScript _controlScript;
 
     private void Awake()
     {
-        // TODO: set animator
+        _controlScript = GameObject.FindObjectOfType<ControlScript>();
 
         interact.performed += OnInteractionPerformed;
         _minimumFireDuration = _controlScript.minFireDurationPlayer;
         _maximumFireDuration = _controlScript.maxFireDurationPlayer;
         _fireSprite.enabled = false;
+
+        
     }
 
     private void Update()
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        openMenu();
+        OpenMenu();
     }
 
     private void FindInteractableObject()
@@ -212,7 +212,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void openMenu()
+    private void OpenMenu()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
