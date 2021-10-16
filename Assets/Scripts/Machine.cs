@@ -86,11 +86,11 @@ public class Machine : MonoBehaviour, Interactable
         // Find heat indicator
         _heatIndicator = transform.Find("MachineSprite").transform.Find("HeatIndicator").GetComponent<SpriteRenderer>();
         // Set heat indicator colours
-        _heatColorSafe = new Color(0, 1, 0);
-        _heatColorHot = new Color(1, 0.64f, 0);
-        _heatColorVeryHot = new Color(1, 0, 0);
-        _heatColorCold = new Color(0.2f, 0.9f, 1);
-        _heatColorVeryCold = new Color(0.75f, 1, 1);
+        _heatColorSafe = new Color(0.3496594f, 0.6981132f, 0.2206301f);
+        _heatColorHot = new Color(0.7075472f, 0.09678713f, 0.09678713f);
+        _heatColorVeryHot = new Color(0.3301887f, 0.01090246f, 0.01090246f);
+        _heatColorCold = new Color(0.6650944f, 0.9255766f, 1f);
+        _heatColorVeryCold = new Color(0, 0.4471668f, 0.8867924f);
         // Set heat colour to safe as a starting point
         SetHeatIndicator(_heatColorSafe);
     }
