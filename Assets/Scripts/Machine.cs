@@ -19,7 +19,7 @@ public class Machine : MonoBehaviour, Interactable
     //-----------------HEAT RELATED PARAMETERS----------------------
     [SerializeField]
     private float _currentHeat; // Machine's current heat level
-    private int _adjustedHeat; // Rounded heat to an int, used for calculating heat states
+    public int adjustedHeat; // Rounded heat to an int, used for calculating heat states
     private int _prevAdjustedHeat; // Previous adjusted heat, used to skip unnecessary logic
     [SerializeField]
     private float _heatRate; // Machine's rate of change per round (# of times it will change state in a round).
@@ -113,16 +113,16 @@ public class Machine : MonoBehaviour, Interactable
         _currentHeat += (_heatRate * Time.deltaTime) / RoundManager.RoundDuration;
 
         // Set previous adjusted heat
-        _prevAdjustedHeat = _adjustedHeat;
+        _prevAdjustedHeat = adjustedHeat;
 
         // Update adjusted heat
         if (_currentHeat >= 0)
-            _adjustedHeat = (int)Mathf.Floor(_currentHeat);
+            adjustedHeat = (int)Mathf.Floor(_currentHeat);
         else
-            _adjustedHeat = (int)Mathf.Ceil(_currentHeat);
+            adjustedHeat = (int)Mathf.Ceil(_currentHeat);
 
         // Update states according to adjusted heat
-        if (_adjustedHeat != _prevAdjustedHeat)
+        if (adjustedHeat != _prevAdjustedHeat)
         {
             AdjustMachineState();
         }
@@ -133,7 +133,7 @@ public class Machine : MonoBehaviour, Interactable
     //Changes machine's state according to its heat
     private void AdjustMachineState()
     {
-        switch (_adjustedHeat)
+        switch (adjustedHeat)
         {
             // Safe state
             case 0:

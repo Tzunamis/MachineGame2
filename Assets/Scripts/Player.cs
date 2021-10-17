@@ -158,8 +158,6 @@ public class Player : MonoBehaviour
         _fireTimer = 0;
         _fireSprite.enabled = true;
 
-        Debug.Log("Set on fire");
-
         _currentFireDuration = Random.Range(_minimumFireDuration, _maximumFireDuration);
 
         if (_heldItem != null)
