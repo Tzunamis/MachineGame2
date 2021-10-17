@@ -29,6 +29,7 @@ public class ControlScript : MonoBehaviour
     public float freezeMultiplier;
     [Header("Round Manager")]
     public float roundDuration;
+    public float scoreFrequency;
     public int numOfRoundsPerTeam;
     public int numTeams;
     public int numPlayersPerTeam;

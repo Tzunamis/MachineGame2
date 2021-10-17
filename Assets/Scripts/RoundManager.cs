@@ -6,10 +6,11 @@ using UnityEngine.InputSystem;
 public class RoundManager : MonoBehaviour
 {
     private static float _roundDuration; // How long is a round?
-    private static float _roundTimer; // How far have we progressed into the current round?
+    private static float _roundTimer = 0; // How far have we progressed into the current round?
     private bool _isRoundStarted = false;
     private int _currentRound = 0;
-    private float _scoreIncrement; // Poorly named. This is how often points are scored by the active team(s)
+    private float _scoreFrequency; // Poorly named. This is how often points are scored by the active team(s)
+    private float _scoreTimer = 0;
     public static float RoundDuration
     {
         get
@@ -97,6 +98,7 @@ public class RoundManager : MonoBehaviour
         _numPlayersPerTeam = controlScript.numPlayersPerTeam;
         _numMachinesPerTeam = controlScript.numMachinesPerTeam;
         _isSimultaneous = controlScript.isSimultaneous;
+        _scoreFrequency = controlScript.scoreFrequency;
 
         InitializeTeams();
 
@@ -124,7 +126,7 @@ public class RoundManager : MonoBehaviour
         foreach (GameObject machineParent in machineParents)
         {
             // Iterate through machine parent to find machines
-            for(int i = 0; i < transform.childCount; i++)
+            for(int i = 0; i < machineParent.transform.childCount; i++)
             {
                 Machine machineToBeStored = machineParent.transform.GetChild(i).GetComponent<Machine>();
                 // Add machine to correct list based on machine's teamID
@@ -136,12 +138,10 @@ public class RoundManager : MonoBehaviour
         {
             GameObject[] playersOnThisTeam = new GameObject[_numPlayersPerTeam];
 
-            //Create player gameobject instantiate them and place them in a gameobject array to be placed on the line under
+            //Create player gameobject and place them in a gameobject array to be placed
             for (int j = 0; j < _numPlayersPerTeam; j++)
             {
                 GameObject playerToInstantiate = playerPrefab;
-                // Anything else we need to do to players can happen here
-                //players[i, j] = playerToInstantiate;
                 playersOnThisTeam[j] = playerToInstantiate;
             }
 
@@ -250,18 +250,8 @@ public class RoundManager : MonoBehaviour
             {
                 if (Teams[(TeamList)i].isActive)
                 {
-                    // Disable active players
-                    for (int j = 0; j < _numPlayersPerTeam; j++)
-                    {
-                        Debug.Log("setting inactive");
-                        Teams[(TeamList)i].playerList[j].SetActive(false);
-                    }
 
-                    // Modify teamdata
-                    TeamData currentTeam = Teams[(TeamList)i];
-                    Debug.Log("Current team: " + i);
-                    currentTeam.isActive = false;
-                    Teams[(TeamList)i] = currentTeam;
+                    Teams[(TeamList)i] = SetTeamActive(Teams[(TeamList)i], false);
 
                     // Determine next active team
                     int nextActiveTeamID = 0;
@@ -271,18 +261,7 @@ public class RoundManager : MonoBehaviour
                         nextActiveTeamID = i + 1;
                     }
 
-                    // Set new active players
-                    for (int j = 0; j < _numPlayersPerTeam; j++)
-                    {
-                        Debug.Log("setting active");
-                        Teams[(TeamList)nextActiveTeamID].playerList[j].SetActive(true);
-                    }
-
-                    // Modify teamdata
-                    TeamData nextTeam = Teams[(TeamList)nextActiveTeamID];
-                    Debug.Log("Next team: " + nextActiveTeamID);
-                    nextTeam.isActive = true;
-                    Teams[(TeamList)nextActiveTeamID] = nextTeam;
+                    Teams[(TeamList)nextActiveTeamID] = SetTeamActive(Teams[(TeamList)nextActiveTeamID], true);
 
                     //End for loop
                     i = _numberTeams;
@@ -295,14 +274,29 @@ public class RoundManager : MonoBehaviour
         
     }
 
+    private TeamData SetTeamActive(TeamData team, bool isActive)
+    {
+        // Enable/disable active players
+        for (int j = 0; j < _numPlayersPerTeam; j++)
+        {
+            team.playerList[j].SetActive(isActive);
+        }
+
+        // Modify teamdata
+        team.isActive = isActive;
+        return team;
+    }
+
     private void Update()
     {
         if (_isRoundStarted)
         {
             ManageRoundTimer();
+            ManageScoreTimer();
         }
     }
 
+    
     private void ManageRoundTimer()
     {
         _roundTimer += Time.deltaTime;
@@ -310,11 +304,68 @@ public class RoundManager : MonoBehaviour
         {
             //Reset timer
             _roundTimer = 0;
+            //Reset score timer (for consistency between teams)
+            _scoreTimer = 0;
             //Increment round counter
             _currentRound++;
             //Initialize next round
             InitializeRound();
+
+            // End game if currentRound reaches max rounds
         }
     }
 
+    private void ManageScoreTimer()
+    {
+        _scoreTimer += Time.deltaTime;
+        if (_scoreTimer >= _scoreFrequency)
+        {
+            //Reset timer
+            _scoreTimer = 0;
+            IncrementScore();
+        }
+    }
+
+    private void IncrementScore()
+    {
+        for (int i = 0; i < _numberTeams; i++)
+        {
+            TeamData currentTeam = Teams[(TeamList)i];
+
+            if (currentTeam.isActive)
+            {
+                //Debug.Log("update score");
+                foreach(Machine machine in currentTeam.machineList)
+                {
+                    //Debug.Log("Adjusted heat: " + machine.adjustedHeat);
+                    switch (machine.adjustedHeat)
+                    {
+                        // Safe state
+                        case 0:
+                            Debug.Log("+4");
+                            currentTeam.score += 4;
+                            break;
+                        // Hot state 1 / Cold state 1
+                        case 1:
+                        case -1:
+                            Debug.Log("+2");
+                            currentTeam.score += 2;
+                            break;
+                        // Hot state 2 / Cold state 2
+                        case 2:
+                        case -2:
+                            Debug.Log("+1");
+                            currentTeam.score += 1;
+                            break;
+                    }
+                    
+                }
+                
+                Debug.Log("New score: " + currentTeam.score);
+
+                // Update teamdata
+                Teams[(TeamList)i] = currentTeam;
+            }
+        }
+    }
 }
