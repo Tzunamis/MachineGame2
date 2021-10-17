@@ -212,12 +212,16 @@ public class PlayerMovement : MonoBehaviour
 
     public void Freeze()
     {
-        _isFrozen = true;
+        if(!_isFrozen)
+        {
+            _isFrozen = true;
 
-        _freezeTimer = 0;
-        _freezeSprite.enabled = true;
+            _freezeTimer = 0;
+            _freezeSprite.enabled = true;
 
-        _currentFreezeDuration = Random.Range(_minimumFreezeDuration, _maximumFreezeDuration);
+            _currentFreezeDuration = Random.Range(_minimumFreezeDuration, _maximumFreezeDuration);
+        }
+        
     }
 
     public void Thaw()

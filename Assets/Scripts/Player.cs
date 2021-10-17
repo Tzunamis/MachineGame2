@@ -154,19 +154,22 @@ public class Player : MonoBehaviour
 
     public void LightOnFire()
     {
-        _isOnFire = true;
-        _fireTimer = 0;
-        _fireSprite.enabled = true;
-
-        _currentFireDuration = Random.Range(_minimumFireDuration, _maximumFireDuration);
-
-        if (_heldItem != null)
+        if(!_isOnFire)
         {
-            DropItem(); // Danger of dropping it in same location as a machine
+            _isOnFire = true;
+            _fireTimer = 0;
+            _fireSprite.enabled = true;
+
+            _currentFireDuration = Random.Range(_minimumFireDuration, _maximumFireDuration);
+
+            if (_heldItem != null)
+            {
+                DropItem(); // Danger of dropping it in same location as a machine
+            }
+
+            _movementScript.LightOnFire();
         }
-
-        _movementScript.LightOnFire();
-
+        
     }
 
     public void Extinguish()

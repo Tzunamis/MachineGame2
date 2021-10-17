@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class RoundManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class RoundManager : MonoBehaviour
     private int _currentRound = 0;
     private float _scoreFrequency; // Poorly named. This is how often points are scored by the active team(s)
     private float _scoreTimer = 0;
+    public GameObject camera;
     public static float RoundDuration
     {
         get
@@ -69,6 +71,9 @@ public class RoundManager : MonoBehaviour
 
     public Dictionary<TeamList, TeamData> Teams;
 
+    // UI stuff
+    public Text scoreText;
+    public Text timerText;
 
     // Singleton pattern
     private static RoundManager _instance;
@@ -108,6 +113,7 @@ public class RoundManager : MonoBehaviour
 
         _roundDuration = controlScript.roundDuration;
         _isRoundStarted = true;
+        UpdateScoreUI();
     }
 
     private void InitializeTeams()
@@ -268,6 +274,12 @@ public class RoundManager : MonoBehaviour
 
                 }
             }
+
+            if(camera != null)
+            {
+                camera.transform.RotateAround(Vector3.zero, Vector3.forward, 120);
+            }
+
         }
     }
 
@@ -310,6 +322,7 @@ public class RoundManager : MonoBehaviour
 
             // End game if currentRound reaches max rounds
         }
+        UpdateTimerUI();
     }
 
     private void ManageScoreTimer()
@@ -357,12 +370,23 @@ public class RoundManager : MonoBehaviour
                     }
                     
                 }
-                
-                Debug.Log("New score: " + currentTeam.score);
+
+                // Update score UI
+                UpdateScoreUI();
 
                 // Update teamdata
                 Teams[(TeamList)i] = currentTeam;
             }
         }
+    }
+
+    private void UpdateScoreUI()
+    {
+        scoreText.text = ("Team 1: " + Teams[TeamList.Team1].score + " points\n" + "Team 2: " + Teams[TeamList.Team2].score + " points\n" + "Team 3: " + Teams[TeamList.Team3].score + " points\n");
+    }
+
+    private void UpdateTimerUI()
+    {
+        timerText.text = ("Time remaining: " + Mathf.Ceil(RoundDuration - RoundTimer));
     }
 }
