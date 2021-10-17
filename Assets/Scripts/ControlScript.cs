@@ -27,8 +27,14 @@ public class ControlScript : MonoBehaviour
     [Header("Movement Speed")]
     public float fireMultiplier;
     public float freezeMultiplier;
-    [Header("Other")]
+    [Header("Round Manager")]
     public float roundDuration;
+    public int numOfRoundsPerTeam;
+    public int numTeams;
+    public int numPlayersPerTeam;
+    public int numMachinesPerTeam;
+    public bool isSimultaneous;
+    [Header("Other")]
     public float productRate;
     public float explosionRadius;
     public float itemHeatIncrement;

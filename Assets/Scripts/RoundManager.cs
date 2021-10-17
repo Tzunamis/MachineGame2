@@ -8,6 +8,8 @@ public class RoundManager : MonoBehaviour
     private static float _roundDuration; // How long is a round?
     private static float _roundTimer; // How far have we progressed into the current round?
     private bool _isRoundStarted = false;
+    private int _currentRound = 0;
+    private float _scoreIncrement; // Poorly named. This is how often points are scored by the active team(s)
     public static float RoundDuration
     {
         get
@@ -40,20 +42,24 @@ public class RoundManager : MonoBehaviour
         Team4
     }
 
-    public int numberTeams = 4;
-    public int numPlayersPerTeam = 4;
-    public int numMachinesPerTeam = 20;
+    private int _numberTeams;
+    private int _numPlayersPerTeam;
+    private int _numMachinesPerTeam;
+    private bool _isSimultaneous;
 
     public struct TeamData
     {
-        public TeamData(int initialScore, GameObject[] initialPlayerList, Machine[] initialMachineList)
+
+        public TeamData(bool startsActive, int initialScore, GameObject[] initialPlayerList, Machine[] initialMachineList)
         {
+            isActive = startsActive;
             score = initialScore;
             playerList = initialPlayerList;
             machineList = initialMachineList;
             playerIDToSpawn = 0;
         }
 
+        public bool isActive;
         public int score;
         public GameObject[] playerList;
         public Machine[] machineList;
@@ -87,7 +93,14 @@ public class RoundManager : MonoBehaviour
     {
         Teams = new Dictionary<TeamList, TeamData>();
 
+        _numberTeams = controlScript.numTeams;
+        _numPlayersPerTeam = controlScript.numPlayersPerTeam;
+        _numMachinesPerTeam = controlScript.numMachinesPerTeam;
+        _isSimultaneous = controlScript.isSimultaneous;
+
         InitializeTeams();
+
+        SpawnPlayers();
 
         InitializeRound();
 
@@ -101,9 +114,9 @@ public class RoundManager : MonoBehaviour
             // For this to work, all machines need to be children of "machineParent" objects which are linked in the inspector
         
         // Makes one list of machines for each team
-        List<Machine>[] machines = new List<Machine>[numberTeams];
+        List<Machine>[] machines = new List<Machine>[_numberTeams];
 
-        for(int i = 0; i < numberTeams; i++)
+        for(int i = 0; i < _numberTeams; i++)
         {
             machines[i] = new List<Machine>();
         }
@@ -119,12 +132,12 @@ public class RoundManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < numberTeams; i++)
+        for (int i = 0; i < _numberTeams; i++)
         {
-            GameObject[] playersOnThisTeam = new GameObject[numPlayersPerTeam];
+            GameObject[] playersOnThisTeam = new GameObject[_numPlayersPerTeam];
 
             //Create player gameobject instantiate them and place them in a gameobject array to be placed on the line under
-            for (int j = 0; j < numPlayersPerTeam; j++)
+            for (int j = 0; j < _numPlayersPerTeam; j++)
             {
                 GameObject playerToInstantiate = playerPrefab;
                 // Anything else we need to do to players can happen here
@@ -132,19 +145,25 @@ public class RoundManager : MonoBehaviour
                 playersOnThisTeam[j] = playerToInstantiate;
             }
 
+            // Check if teams play simultaneously to determine which teams start the game active
+            bool startsActive = false;
+
+            if(_isSimultaneous || i == 0)
+            {
+                startsActive = true;
+            }
+
             // Create team dictionary
-            Teams.Add((TeamList)i, new TeamData(0, playersOnThisTeam, machines[i].ToArray()));
+            Teams.Add((TeamList)i, new TeamData(startsActive, 0, playersOnThisTeam, machines[i].ToArray()));
         }
 
     }
 
-    private void InitializeRound()
+    private void SpawnPlayers()
     {
-        //Kill any players existing / disable them (have a reference in TeamData)
-        
         //Instantiate players
 
-        foreach(Spawner currentSpawner in spawners)
+        foreach (Spawner currentSpawner in spawners)
         {
             TeamData currentTeam = Teams[currentSpawner.teamSpawnType];
 
@@ -152,7 +171,7 @@ public class RoundManager : MonoBehaviour
             // Set player scale according to controlscript
             float playerScale = controlScript.playerScale;
             playerToSpawn.transform.localScale = new Vector3(playerScale, playerScale, 1);
-            
+
 
             // Set controls
             //InputAction[] currentPlayerControls = SetPlayerControls(currentTeam.playerIDToSpawn);
@@ -160,34 +179,35 @@ public class RoundManager : MonoBehaviour
             switch (currentTeam.playerIDToSpawn)
             {
                 case 0:
-                    Debug.Log("Setting p1 controls");
                     playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/tab");
                     //playerToSpawn.GetComponent<PlayerMovement>().movement.ChangeBindingWithGroup("Key.W");
                     break;
                 case 1:
-                    Debug.Log("Setting p2 controls");
                     playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/enter");
                     break;
                 case 2:
-                    Debug.Log("Setting p3 controls");
                     playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/space");
                     break;
                 case 3:
-                    Debug.Log("Setting p4 controls");
                     break;
             }
 
-            //Place & Activate player
-            Instantiate(playerToSpawn, currentSpawner.transform.position, Quaternion.Euler(0, 0, currentSpawner.spawnRotation));
+            // Set player active or inactive
+            if (currentSpawner.teamSpawnType == TeamList.Team1 || _isSimultaneous)
+            {
+                playerToSpawn.SetActive(true);
+            }
+            else
+            {
+                playerToSpawn.SetActive(false);
+            }
 
-            // Set active players
-            // Maybe according to spawner?
+            //Place player and update teamdata reference
+            currentTeam.playerList[currentTeam.playerIDToSpawn] = Instantiate(playerToSpawn, currentSpawner.transform.position, Quaternion.Euler(0, 0, currentSpawner.spawnRotation));
 
             //Swap player to spawn
-                
                 //Didn't work: currentTeam.playerIDToSpawn = (currentTeam.playerIDToSpawn >= numPlayersPerTeam) ? currentTeam.playerIDToSpawn++ : 0;
-
-            if (currentTeam.playerIDToSpawn >= numPlayersPerTeam - 1)
+            if (currentTeam.playerIDToSpawn >= _numPlayersPerTeam - 1)
             {
                 currentTeam.playerIDToSpawn = 0;
             }
@@ -196,7 +216,7 @@ public class RoundManager : MonoBehaviour
                 currentTeam.playerIDToSpawn++;
             }
 
-
+            // Update teamdata
             Teams[currentSpawner.teamSpawnType] = currentTeam;
 
             // Cycle spawners if needed
@@ -221,6 +241,60 @@ public class RoundManager : MonoBehaviour
         }
     }
 
+    private void InitializeRound()
+    {
+        if(!_isSimultaneous && _currentRound != 0)
+        {
+            //Cycle active players
+            for (int i = 0; i < _numberTeams; i++)
+            {
+                if (Teams[(TeamList)i].isActive)
+                {
+                    // Disable active players
+                    for (int j = 0; j < _numPlayersPerTeam; j++)
+                    {
+                        Debug.Log("setting inactive");
+                        Teams[(TeamList)i].playerList[j].SetActive(false);
+                    }
+
+                    // Modify teamdata
+                    TeamData currentTeam = Teams[(TeamList)i];
+                    Debug.Log("Current team: " + i);
+                    currentTeam.isActive = false;
+                    Teams[(TeamList)i] = currentTeam;
+
+                    // Determine next active team
+                    int nextActiveTeamID = 0;
+
+                    if(i < _numberTeams - 1)
+                    {
+                        nextActiveTeamID = i + 1;
+                    }
+
+                    // Set new active players
+                    for (int j = 0; j < _numPlayersPerTeam; j++)
+                    {
+                        Debug.Log("setting active");
+                        Teams[(TeamList)nextActiveTeamID].playerList[j].SetActive(true);
+                    }
+
+                    // Modify teamdata
+                    TeamData nextTeam = Teams[(TeamList)nextActiveTeamID];
+                    Debug.Log("Next team: " + nextActiveTeamID);
+                    nextTeam.isActive = true;
+                    Teams[(TeamList)nextActiveTeamID] = nextTeam;
+
+                    //End for loop
+                    i = _numberTeams;
+
+                }
+            }
+        }
+
+        
+        
+    }
+
     private void Update()
     {
         if (_isRoundStarted)
@@ -234,8 +308,12 @@ public class RoundManager : MonoBehaviour
         _roundTimer += Time.deltaTime;
         if(_roundTimer >= RoundDuration)
         {
-            //End of round stuff
+            //Reset timer
             _roundTimer = 0;
+            //Increment round counter
+            _currentRound++;
+            //Initialize next round
+            InitializeRound();
         }
     }
 
