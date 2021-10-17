@@ -269,9 +269,6 @@ public class RoundManager : MonoBehaviour
                 }
             }
         }
-
-        
-        
     }
 
     private TeamData SetTeamActive(TeamData team, bool isActive)
