@@ -13,6 +13,8 @@ public class RoundManager : MonoBehaviour
     private float _scoreFrequency; // Poorly named. This is how often points are scored by the active team(s)
     private float _scoreTimer = 0;
     public GameObject camera;
+
+    bool controlsBound = false;
     public static float RoundDuration
     {
         get
@@ -35,7 +37,7 @@ public class RoundManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject[] machineParents;
 
-    [SerializeField] private InputActionReference interact = null;
+    [SerializeField] private InputActionReference interact;
 
     public enum TeamList
     {
@@ -49,6 +51,7 @@ public class RoundManager : MonoBehaviour
     private int _numPlayersPerTeam;
     private int _numMachinesPerTeam;
     private bool _isSimultaneous;
+    private bool _spawningPlayers = false;
 
     public struct TeamData
     {
@@ -107,7 +110,16 @@ public class RoundManager : MonoBehaviour
 
         InitializeTeams();
 
-        SpawnPlayers();
+        if(_spawningPlayers)
+        {
+            // Not quite working. Input system makes it very hard to rebind controls at runtime
+            SpawnPlayers();
+        }
+        else
+        {
+            // This is an alternate function that accomplishes the same thing as SpawnPlayers with preexisting players in the scene (they need to be children of the spawners)
+            RegisterPlayers();
+        }
 
         InitializeRound();
 
@@ -140,28 +152,40 @@ public class RoundManager : MonoBehaviour
             }
         }
 
+       
         for (int i = 0; i < _numberTeams; i++)
         {
-            GameObject[] playersOnThisTeam = new GameObject[_numPlayersPerTeam];
-
-            //Create player gameobject and place them in a gameobject array to be placed
-            for (int j = 0; j < _numPlayersPerTeam; j++)
-            {
-                GameObject playerToInstantiate = playerPrefab;
-                playersOnThisTeam[j] = playerToInstantiate;
-            }
 
             // Check if teams play simultaneously to determine which teams start the game active
             bool startsActive = false;
 
-            if(_isSimultaneous || i == 0)
+            if (_isSimultaneous || i == 0)
             {
                 startsActive = true;
             }
 
+            GameObject[] playersOnThisTeam = new GameObject[_numPlayersPerTeam];
+
+            if(_spawningPlayers)
+            {
+                //Create player gameobject and place them in a gameobject array to be placed
+                for (int j = 0; j < _numPlayersPerTeam; j++)
+                {
+                    GameObject playerToInstantiate = playerPrefab;
+                    playersOnThisTeam[j] = playerToInstantiate;
+                }
+
+            }
+
+
             // Create team dictionary
             Teams.Add((TeamList)i, new TeamData(startsActive, 0, playersOnThisTeam, machines[i].ToArray()));
+
+
         }
+        
+
+        
 
     }
 
@@ -178,25 +202,7 @@ public class RoundManager : MonoBehaviour
             float playerScale = controlScript.playerScale;
             playerToSpawn.transform.localScale = new Vector3(playerScale, playerScale, 1);
 
-
-            // Set controls
-            //InputAction[] currentPlayerControls = SetPlayerControls(currentTeam.playerIDToSpawn);
-
-            switch (currentTeam.playerIDToSpawn)
-            {
-                case 0:
-                    playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/tab");
-                    //playerToSpawn.GetComponent<PlayerMovement>().movement.ChangeBindingWithGroup("Key.W");
-                    break;
-                case 1:
-                    playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/enter");
-                    break;
-                case 2:
-                    playerToSpawn.GetComponent<Player>().interact.ApplyBindingOverride(0, "<Keyboard>/space");
-                    break;
-                case 3:
-                    break;
-            }
+            
 
             // Set player active or inactive
             if (currentSpawner.teamSpawnType == TeamList.Team1 || _isSimultaneous)
@@ -211,8 +217,98 @@ public class RoundManager : MonoBehaviour
             //Place player and update teamdata reference
             currentTeam.playerList[currentTeam.playerIDToSpawn] = Instantiate(playerToSpawn, currentSpawner.transform.position, Quaternion.Euler(0, 0, currentSpawner.spawnRotation));
 
+            // Set controls
+            //InputAction[] currentPlayerControls = SetPlayerControls(currentTeam.playerIDToSpawn);
+
+            Player playerScript = playerToSpawn.GetComponent<Player>();
+
+            switch (currentTeam.playerIDToSpawn)
+            {
+                case 0:
+                    //    Debug.Log(playerScript.interact.bindings[0].effectivePath);
+                    InputBinding inputbinding = playerScript.interact.bindings[0];
+                    inputbinding.path = "<Keyboard>/enter";
+                    playerScript.interact.ApplyBindingOverride(0, inputbinding);
+               //     Debug.Log(playerScript.interact.bindings[0].effectivePath);
+                    //playerScript.interact.
+                    //playerScript.interact = interact.action;
+                    //playerScript.GetComponent<Player>().interact.performed += playerScript.OnInteractionPerformed;
+                    //playerToSpawn.GetComponent<PlayerMovement>().movement.ChangeBindingWithGroup("Key.W");
+                    break;
+                case 1:
+                    playerScript.interact.ApplyBindingOverride(0, "<Keyboard>/tab");
+                //    Debug.Log(playerScript.interact.bindings[0].effectivePath);
+                    break;
+                case 2:
+                    playerScript.interact.ApplyBindingOverride(0, "<Keyboard>/enter");
+              //      Debug.Log(playerScript.interact.bindings[0].effectivePath);
+                    break;
+                case 3:
+                    break;
+            }
+
             //Swap player to spawn
-                //Didn't work: currentTeam.playerIDToSpawn = (currentTeam.playerIDToSpawn >= numPlayersPerTeam) ? currentTeam.playerIDToSpawn++ : 0;
+            //Didn't work: currentTeam.playerIDToSpawn = (currentTeam.playerIDToSpawn >= numPlayersPerTeam) ? currentTeam.playerIDToSpawn++ : 0;
+            if (currentTeam.playerIDToSpawn >= _numPlayersPerTeam - 1)
+            {
+                currentTeam.playerIDToSpawn = 0;
+            }
+            else
+            {
+                currentTeam.playerIDToSpawn++;
+            }
+
+            // Update teamdata
+            Teams[currentSpawner.teamSpawnType] = currentTeam;
+
+            // Cycle spawners if needed
+            if (currentSpawner.cycleTeams)
+            {
+                switch (currentSpawner.teamSpawnType)
+                {
+                    case TeamList.Team1:
+                        currentSpawner.teamSpawnType = TeamList.Team2;
+                        break;
+                    case TeamList.Team2:
+                        currentSpawner.teamSpawnType = TeamList.Team3;
+                        break;
+                    case TeamList.Team3:
+                        currentSpawner.teamSpawnType = TeamList.Team4;
+                        break;
+                    case TeamList.Team4:
+                        currentSpawner.teamSpawnType = TeamList.Team1;
+                        break;
+                }
+            }
+        }
+    }
+
+    private void RegisterPlayers()
+    {
+        foreach (Spawner currentSpawner in spawners)
+        {
+            TeamData currentTeam = Teams[currentSpawner.teamSpawnType];
+
+            GameObject playerToRegister = currentSpawner.transform.GetChild(0).gameObject;
+            // Set player scale according to controlscript
+            float playerScale = controlScript.playerScale;
+            playerToRegister.transform.localScale = new Vector3(playerScale, playerScale, 1);
+
+            // Set player active or inactive
+            if (currentSpawner.teamSpawnType == TeamList.Team1 || _isSimultaneous)
+            {
+                playerToRegister.SetActive(true);
+            }
+            else
+            {
+                playerToRegister.SetActive(false);
+            }
+
+            //Place player and update teamdata reference
+            currentTeam.playerList[currentTeam.playerIDToSpawn] = playerToRegister;
+
+            //Swap player to spawn
+            //Didn't work: currentTeam.playerIDToSpawn = (currentTeam.playerIDToSpawn >= numPlayersPerTeam) ? currentTeam.playerIDToSpawn++ : 0;
             if (currentTeam.playerIDToSpawn >= _numPlayersPerTeam - 1)
             {
                 currentTeam.playerIDToSpawn = 0;
@@ -256,8 +352,9 @@ public class RoundManager : MonoBehaviour
             {
                 if (Teams[(TeamList)i].isActive)
                 {
-
                     Teams[(TeamList)i] = SetTeamActive(Teams[(TeamList)i], false);
+
+                    Debug.Log(Teams[(TeamList)i] + " is active");
 
                     // Determine next active team
                     int nextActiveTeamID = 0;
@@ -298,6 +395,12 @@ public class RoundManager : MonoBehaviour
 
     private void Update()
     {
+        //if(!controlsBound)
+        //{
+        //    controlsBound = true;
+        //    BindControls();
+        //}
+
         if (_isRoundStarted)
         {
             ManageRoundTimer();
@@ -305,7 +408,49 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    
+    //private void BindControls()
+    //{
+
+    //    for(int i = 0; i < _numberTeams; i++)
+    //    {
+
+    //        for(int j = 0; j < _numPlayersPerTeam; j++)
+    //        {
+    //            // Set controls
+
+    //            Player playerScript = Teams[(TeamList)i].playerList[j].GetComponent<Player>();
+
+    //            switch (Teams[(TeamList)i].playerIDToSpawn)
+    //            {
+    //                case 0:
+    //                    InputBinding inputbinding = playerScript.interact.bindings[0];
+    //                    inputbinding.overridePath = "<Keyboard>/enter";
+    //                    playerScript.interact.ApplyBindingOverride(0, inputbinding);
+    //                    Debug.Log(playerScript.interact.bindings[0].effectivePath);
+    //                    //playerScript.interact.
+    //                    //playerScript.interact = interact.action;
+    //                    //playerScript.GetComponent<Player>().interact.performed += playerScript.OnInteractionPerformed;
+    //                    //playerToSpawn.GetComponent<PlayerMovement>().movement.ChangeBindingWithGroup("Key.W");
+    //                    break;
+    //                case 1:
+    //                    playerScript.interact.ApplyBindingOverride(0, "<Keyboard>/tab");
+    //                    Debug.Log(playerScript.interact.bindings[0].effectivePath);
+    //                    break;
+    //                case 2:
+    //                    playerScript.interact.ApplyBindingOverride(0, "<Keyboard>/space");
+    //                    Debug.Log(playerScript.interact.bindings[0].effectivePath);
+    //                    break;
+    //                case 3:
+    //                    break;
+    //            }
+
+    //        }
+
+    //    }
+
+        
+
+    //}
     private void ManageRoundTimer()
     {
         _roundTimer += Time.deltaTime;
@@ -344,27 +489,23 @@ public class RoundManager : MonoBehaviour
 
             if (currentTeam.isActive)
             {
-                //Debug.Log("update score");
+                Debug.Log("update score");
                 foreach(Machine machine in currentTeam.machineList)
                 {
-                    //Debug.Log("Adjusted heat: " + machine.adjustedHeat);
                     switch (machine.adjustedHeat)
                     {
                         // Safe state
                         case 0:
-                            Debug.Log("+4");
                             currentTeam.score += 4;
                             break;
                         // Hot state 1 / Cold state 1
                         case 1:
                         case -1:
-                            Debug.Log("+2");
                             currentTeam.score += 2;
                             break;
                         // Hot state 2 / Cold state 2
                         case 2:
                         case -2:
-                            Debug.Log("+1");
                             currentTeam.score += 1;
                             break;
                     }
@@ -382,7 +523,7 @@ public class RoundManager : MonoBehaviour
 
     private void UpdateScoreUI()
     {
-        scoreText.text = ("Team 1: " + Teams[TeamList.Team1].score + " points\n" + "Team 2: " + Teams[TeamList.Team2].score + " points\n" + "Team 3: " + Teams[TeamList.Team3].score + " points\n");
+        scoreText.text = ("Team 1: " + Teams[TeamList.Team1].score + "\nTeam 2: " + Teams[TeamList.Team2].score + "\nTeam 3: " + Teams[TeamList.Team3].score);
     }
 
     private void UpdateTimerUI()

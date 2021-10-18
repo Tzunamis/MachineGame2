@@ -135,20 +135,20 @@ MonoBehaviour:
   _interactionRadius: 1
   _heldItem: {fileID: 0}
   interact:
-    m_Name: Interact
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: ffaeebdb-11ec-4c40-bec2-bd3d1eb559a6
+    m_Name: New action
+    m_Type: 1
+    m_ExpectedControlType: Button
+    m_Id: 90e5d742-10d0-402a-8237-d1fc15d8618b
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: c18ae93e-5e53-4eb0-8b79-e27bdcda8787
-      m_Path: 
+      m_Id: bba32dbc-1ab6-48e7-beec-8e54881cc5cb
+      m_Path: <Keyboard>/space
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Interact
+      m_Action: New action
       m_Flags: 0
   _movementScript: {fileID: 6964228607516325894}
   _fireSprite: {fileID: 2480569326910217340}
@@ -182,7 +182,7 @@ MonoBehaviour:
       m_Flags: 4
     - m_Name: up
       m_Id: 58857449-dc8e-4162-8764-7773e79e1e19
-      m_Path: 
+      m_Path: <Keyboard>/w
       m_Interactions: 
       m_Processors: 
       m_Groups: 
@@ -190,7 +190,7 @@ MonoBehaviour:
       m_Flags: 8
     - m_Name: down
       m_Id: b1c8517f-abbe-4b79-8119-5aa1e01bb94b
-      m_Path: 
+      m_Path: <Keyboard>/s
       m_Interactions: 
       m_Processors: 
       m_Groups: 
@@ -198,7 +198,7 @@ MonoBehaviour:
       m_Flags: 8
     - m_Name: left
       m_Id: 96a12f69-01f9-4538-b57e-e11523ce146e
-      m_Path: 
+      m_Path: <Keyboard>/a
       m_Interactions: 
       m_Processors: 
       m_Groups: 
@@ -206,7 +206,7 @@ MonoBehaviour:
       m_Flags: 8
     - m_Name: right
       m_Id: ca0a30cb-0b6b-4c78-80fe-b38e8858cf61
-      m_Path: 
+      m_Path: <Keyboard>/d
       m_Interactions: 
       m_Processors: 
       m_Groups: 

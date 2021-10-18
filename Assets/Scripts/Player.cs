@@ -29,12 +29,13 @@ public class Player : MonoBehaviour
     {
         _controlScript = GameObject.FindObjectOfType<ControlScript>();
 
+
         interact.performed += OnInteractionPerformed;
+
+        // Fire stuff
         _minimumFireDuration = _controlScript.minFireDurationPlayer;
         _maximumFireDuration = _controlScript.maxFireDurationPlayer;
         _fireSprite.enabled = false;
-
-        
     }
 
     private void Update()
@@ -116,7 +117,7 @@ public class Player : MonoBehaviour
 
     }
 
-    private void OnInteractionPerformed(InputAction.CallbackContext context)
+    public void OnInteractionPerformed(InputAction.CallbackContext context)
     {
         if(!_isOnFire) // Can't use items while you're on fire
         {
