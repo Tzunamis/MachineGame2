@@ -15,6 +15,14 @@ public class RoundManager : MonoBehaviour
     private float _scoreTimer = 0;
     public GameObject camera;
 
+    //Hat color try
+    private SpriteRenderer _hatColor;
+    private Color _hatColorPlayer1;
+    private Color _hatColorPlayer2;
+    private Color _hatColorPlayer3;
+    private Color _hatColorPlayer4;
+
+
     public static float RoundDuration
     {
         get
@@ -138,6 +146,22 @@ public class RoundManager : MonoBehaviour
 
         // Called at the start of each round
         InitializeRound();
+
+
+        // Hat color try
+        _hatColor = transform.Find("Player").transform.Find("JustHat").GetComponent<SpriteRenderer>();
+        //here  the name of the "Player" will be different? depending on pants????
+
+        //do a for each loop somehow
+
+        //Setting red
+        _hatColorPlayer1 = new Color(0.6078432f, 0.2313726f, 0.1333333f);
+        //Setting yellow
+        _hatColorPlayer2 = new Color(0.854902f, 0.6901961f, 0);
+        //Setting blue
+        _hatColorPlayer3 = new Color(0.2039216f, 0.2509804f, 0.4705882f);
+        //Setting green
+        _hatColorPlayer4 = new Color(0.4941176f, 0.5333334f, 0.145098f);
 
     }
 
@@ -361,6 +385,9 @@ public class RoundManager : MonoBehaviour
                         break;
                 }
             }
+
+
+
         }
     }
 
