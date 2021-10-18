@@ -77,6 +77,8 @@ public class RoundManager : MonoBehaviour
     // UI stuff
     public Text scoreText;
     public Text timerText;
+    public Canvas pauseCanvas;
+    public Text pauseText;
 
     // Singleton pattern
     private static RoundManager _instance;
@@ -100,18 +102,30 @@ public class RoundManager : MonoBehaviour
 
     private void Awake()
     {
+        // Create teamdata dictionary
         Teams = new Dictionary<TeamList, TeamData>();
 
+        // Fetch variables from control script
         _numberTeams = controlScript.numTeams;
         _numPlayersPerTeam = controlScript.numPlayersPerTeam;
         _numMachinesPerTeam = controlScript.numMachinesPerTeam;
         _isSimultaneous = controlScript.isSimultaneous;
         _scoreFrequency = controlScript.scoreFrequency;
         _numRounds = _numberTeams * controlScript.numOfRoundsPerTeam;
+        _roundDuration = controlScript.roundDuration;
 
+        // Disable "game over" canvas
+        pauseCanvas.enabled = false;
+
+        // Initialize teamdata
         InitializeTeams();
 
-        if(_spawningPlayers)
+        // Display initial UI
+        UpdateScoreUI();
+        UpdateTimerUI();
+
+        // Manage players
+        if (_spawningPlayers)
         {
             // Not quite working. Input system makes it very hard to rebind controls at runtime
             SpawnPlayers();
@@ -122,11 +136,9 @@ public class RoundManager : MonoBehaviour
             RegisterPlayers();
         }
 
+        // Called at the start of each round
         InitializeRound();
 
-        _roundDuration = controlScript.roundDuration;
-        isRoundStarted = true;
-        UpdateScoreUI();
     }
 
     private void InitializeTeams()
@@ -354,6 +366,9 @@ public class RoundManager : MonoBehaviour
 
     private void InitializeRound()
     {
+        // Used for canvas message at end of function
+        int activeTeam = -1;
+
         if(!_isSimultaneous && _currentRound != 1)
         {
             //Cycle active players and machines
@@ -373,19 +388,37 @@ public class RoundManager : MonoBehaviour
 
                     Teams[(TeamList)nextActiveTeamID] = SetTeamActive(Teams[(TeamList)nextActiveTeamID], true);
 
+                    activeTeam = i;
+
                     //End for loop
                     i = _numberTeams;
-
                 }
             }
 
+            // Rotate camera to next arena if needed
             if(camera != null)
             {
                 camera.transform.RotateAround(Vector3.zero, Vector3.forward, 120);
             }
 
         }
+        else if(!_isSimultaneous)
+        {
+            activeTeam = 0;
+        }
 
+        // Wait for player input to start round
+        isRoundStarted = false;
+        pauseCanvas.enabled = true;
+        if(activeTeam == -1)
+        {
+            pauseText.text = "Players, get ready!\nPress Y to start.";
+        }
+        else
+        {
+            pauseText.text = "Round "+ _currentRound + "\nTeam " + (activeTeam + 1) + ", get ready!\nPress Y to start the round.";
+        }
+        
     }
 
     private TeamData SetTeamActive(TeamData team, bool isActive)
@@ -419,6 +452,11 @@ public class RoundManager : MonoBehaviour
         {
             ManageRoundTimer();
             ManageScoreTimer();
+        }
+        else if (Input.GetKeyDown(KeyCode.Y))
+        {
+            isRoundStarted = true;
+            pauseCanvas.enabled = false;
         }
     }
 
@@ -556,6 +594,12 @@ public class RoundManager : MonoBehaviour
 
     private void EndGame()
     {
-
+        isRoundStarted = false;
+        for( int i = 0; i < _numberTeams; i++)
+        {
+            SetTeamActive(Teams[(TeamList)i], false);
+        }
+        pauseCanvas.enabled = true;
+        pauseText.text = "Game over!\n" + "Team 1: " + Teams[TeamList.Team1].score + " points \nTeam 2: " + Teams[TeamList.Team2].score + " points\nTeam 3: " + Teams[TeamList.Team3].score + " points";
     }
 }

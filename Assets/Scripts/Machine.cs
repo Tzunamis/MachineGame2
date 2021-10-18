@@ -204,7 +204,7 @@ public class Machine : MonoBehaviour, Interactable
     {
         if (product != null)
         {
-            Instantiate(product, transform.position + -transform.up * transform.localScale.x, Quaternion.identity, transform);
+            Instantiate(product, transform.position + -transform.up * transform.localScale.x, GetComponentInParent<Transform>().rotation, transform);
         }
         _productProgress = 0;
     }
