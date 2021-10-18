@@ -49,6 +49,8 @@ public class Machine : MonoBehaviour, Interactable
     //-----------------TEAM ASSIGNMENT PARAMETERS---------------------
     [SerializeField]
     public RoundManager.TeamList teamID; // Which team does this machine belong to?
+    public RoundManager roundManager;
+    public bool isActive;
 
     private void Awake()
     {
@@ -99,7 +101,7 @@ public class Machine : MonoBehaviour, Interactable
     private void Update()
     {
         // If the machine's broken, it won't do these things
-        if(!_isBroken)
+        if(!_isBroken && roundManager.isRoundStarted && isActive)
         {
             ManageHeat();
             ManageProduction(); 

@@ -8,13 +8,13 @@ public class RoundManager : MonoBehaviour
 {
     private static float _roundDuration; // How long is a round?
     private static float _roundTimer = 0; // How far have we progressed into the current round?
-    private bool _isRoundStarted = false;
-    private int _currentRound = 0;
+    public bool isRoundStarted = false;
+    private int _numRounds;
+    private int _currentRound = 1;
     private float _scoreFrequency; // Poorly named. This is how often points are scored by the active team(s)
     private float _scoreTimer = 0;
     public GameObject camera;
 
-    bool controlsBound = false;
     public static float RoundDuration
     {
         get
@@ -107,6 +107,7 @@ public class RoundManager : MonoBehaviour
         _numMachinesPerTeam = controlScript.numMachinesPerTeam;
         _isSimultaneous = controlScript.isSimultaneous;
         _scoreFrequency = controlScript.scoreFrequency;
+        _numRounds = _numberTeams * controlScript.numOfRoundsPerTeam;
 
         InitializeTeams();
 
@@ -124,7 +125,7 @@ public class RoundManager : MonoBehaviour
         InitializeRound();
 
         _roundDuration = controlScript.roundDuration;
-        _isRoundStarted = true;
+        isRoundStarted = true;
         UpdateScoreUI();
     }
 
@@ -149,6 +150,14 @@ public class RoundManager : MonoBehaviour
                 Machine machineToBeStored = machineParent.transform.GetChild(i).GetComponent<Machine>();
                 // Add machine to correct list based on machine's teamID
                 machines[(int)machineToBeStored.teamID].Add(machineToBeStored);
+
+                // Set all machines active
+                machineToBeStored.isActive = true;
+                // Set machine inactive if needed
+                if(!_isSimultaneous && machineToBeStored.teamID != TeamList.Team1)
+                {
+                    machineToBeStored.isActive = false;
+                }
             }
         }
 
@@ -345,16 +354,14 @@ public class RoundManager : MonoBehaviour
 
     private void InitializeRound()
     {
-        if(!_isSimultaneous && _currentRound != 0)
+        if(!_isSimultaneous && _currentRound != 1)
         {
-            //Cycle active players
+            //Cycle active players and machines
             for (int i = 0; i < _numberTeams; i++)
             {
                 if (Teams[(TeamList)i].isActive)
                 {
                     Teams[(TeamList)i] = SetTeamActive(Teams[(TeamList)i], false);
-
-                    Debug.Log(Teams[(TeamList)i] + " is active");
 
                     // Determine next active team
                     int nextActiveTeamID = 0;
@@ -378,14 +385,21 @@ public class RoundManager : MonoBehaviour
             }
 
         }
+
     }
 
     private TeamData SetTeamActive(TeamData team, bool isActive)
     {
-        // Enable/disable active players
-        for (int j = 0; j < _numPlayersPerTeam; j++)
+        // Enable/disable active machines
+        for (int i = 0; i < _numMachinesPerTeam; i++)
         {
-            team.playerList[j].SetActive(isActive);
+            team.machineList[i].isActive = isActive;
+        }
+
+        // Enable/disable active players
+        for (int i = 0; i < _numPlayersPerTeam; i++)
+        {
+            team.playerList[i].SetActive(isActive);
         }
 
         // Modify teamdata
@@ -401,7 +415,7 @@ public class RoundManager : MonoBehaviour
         //    BindControls();
         //}
 
-        if (_isRoundStarted)
+        if (isRoundStarted)
         {
             ManageRoundTimer();
             ManageScoreTimer();
@@ -462,10 +476,19 @@ public class RoundManager : MonoBehaviour
             _scoreTimer = 0;
             //Increment round counter
             _currentRound++;
-            //Initialize next round
-            InitializeRound();
 
-            // End game if currentRound reaches max rounds
+            if(_currentRound <= _numRounds)
+            {
+                //Initialize next round
+                InitializeRound();
+            }
+            else
+            {
+                // End game if currentRound reaches max rounds
+                EndGame();
+            }
+
+
         }
         UpdateTimerUI();
     }
@@ -489,7 +512,6 @@ public class RoundManager : MonoBehaviour
 
             if (currentTeam.isActive)
             {
-                Debug.Log("update score");
                 foreach(Machine machine in currentTeam.machineList)
                 {
                     switch (machine.adjustedHeat)
@@ -512,11 +534,12 @@ public class RoundManager : MonoBehaviour
                     
                 }
 
+                // Update teamdata
+                Teams[(TeamList)i] = currentTeam;
+
                 // Update score UI
                 UpdateScoreUI();
 
-                // Update teamdata
-                Teams[(TeamList)i] = currentTeam;
             }
         }
     }
@@ -529,5 +552,10 @@ public class RoundManager : MonoBehaviour
     private void UpdateTimerUI()
     {
         timerText.text = ("Time remaining: " + Mathf.Ceil(RoundDuration - RoundTimer));
+    }
+
+    private void EndGame()
+    {
+
     }
 }
