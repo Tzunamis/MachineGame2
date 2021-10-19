@@ -615,7 +615,6 @@ public class RoundManager : MonoBehaviour
 
     private void IncrementScore()
     {
-        Debug.Log("Incrementing score");
         for (int i = 0; i < _numberTeams; i++)
         {
             TeamData currentTeam = Teams[(TeamList)i];
