@@ -9,6 +9,7 @@ public class RoundManager : MonoBehaviour
     private static float _roundDuration; // How long is a round?
     private static float _roundTimer = 0; // How far have we progressed into the current round?
     public bool isRoundStarted = false;
+    public bool gameOver = false;
     private int _numRounds;
     private int _currentRound = 1;
     private float _scoreFrequency; // Poorly named. This is how often points are scored by the active team(s)
@@ -418,7 +419,7 @@ public class RoundManager : MonoBehaviour
     private void InitializeRound()
     {
         // Used for canvas message at end of function
-        int activeTeam = -1;
+        int nextActiveTeamID = -1;
 
         if(!_isSimultaneous && _currentRound != 1)
         {
@@ -430,16 +431,17 @@ public class RoundManager : MonoBehaviour
                     Teams[(TeamList)i] = SetTeamActive(Teams[(TeamList)i], false);
 
                     // Determine next active team
-                    int nextActiveTeamID = 0;
-
                     if(i < _numberTeams - 1)
                     {
                         nextActiveTeamID = i + 1;
                     }
+                    else
+                    {
+                        nextActiveTeamID = 0;
+                    }
 
                     Teams[(TeamList)nextActiveTeamID] = SetTeamActive(Teams[(TeamList)nextActiveTeamID], true);
 
-                    activeTeam = i;
 
                     //End for loop
                     i = _numberTeams;
@@ -455,19 +457,19 @@ public class RoundManager : MonoBehaviour
         }
         else if(!_isSimultaneous)
         {
-            activeTeam = 0;
+            nextActiveTeamID = 0;
         }
 
         // Wait for player input to start round
         isRoundStarted = false;
         pauseCanvas.enabled = true;
-        if(activeTeam == -1)
+        if(nextActiveTeamID == -1)
         {
             pauseText.text = "Players, get ready!\nPress Y to start.";
         }
         else
         {
-            pauseText.text = "Round "+ _currentRound + "\nTeam " + (activeTeam + 1) + ", get ready!\nPress Y to start the round.";
+            pauseText.text = "Round "+ _currentRound + "\nTeam " + (nextActiveTeamID + 1) + ", get ready!\nPress Y to start the round.";
         }
         
     }
@@ -499,12 +501,12 @@ public class RoundManager : MonoBehaviour
         //    BindControls();
         //}
 
-        if (isRoundStarted)
+        if (isRoundStarted && !gameOver)
         {
             ManageRoundTimer();
             ManageScoreTimer();
         }
-        else if (Input.GetKeyDown(KeyCode.Y))
+        else if (Input.GetKeyDown(KeyCode.Y) && !gameOver)
         {
             isRoundStarted = true;
             pauseCanvas.enabled = false;
@@ -635,7 +637,12 @@ public class RoundManager : MonoBehaviour
 
     private void UpdateScoreUI()
     {
-        scoreText.text = ("Team 1: " + Teams[TeamList.Team1].score + "\nTeam 2: " + Teams[TeamList.Team2].score + "\nTeam 3: " + Teams[TeamList.Team3].score);
+        string newScoreText = ("Team 1: " + Teams[TeamList.Team1].score + "\nTeam 2: " + Teams[TeamList.Team2].score + "\nTeam 3: " + Teams[TeamList.Team3].score);
+        if (_numberTeams == 4)
+        {
+            newScoreText += "\nTeam 4: " + Teams[TeamList.Team4].score;
+        }
+        scoreText.text = newScoreText;
     }
 
     private void UpdateTimerUI()
@@ -646,11 +653,18 @@ public class RoundManager : MonoBehaviour
     private void EndGame()
     {
         isRoundStarted = false;
+        gameOver = true;
         for( int i = 0; i < _numberTeams; i++)
         {
             SetTeamActive(Teams[(TeamList)i], false);
         }
         pauseCanvas.enabled = true;
-        pauseText.text = "Game over!\n" + "Team 1: " + Teams[TeamList.Team1].score + " points \nTeam 2: " + Teams[TeamList.Team2].score + " points\nTeam 3: " + Teams[TeamList.Team3].score + " points";
+        string gameOverText = "Game over!\n" + "Team 1: " + Teams[TeamList.Team1].score + " points \nTeam 2: " + Teams[TeamList.Team2].score + " points\nTeam 3: " + Teams[TeamList.Team3].score + " points\n";
+        if(_numberTeams == 4)
+        {
+            gameOverText += "Team 4: " + Teams[TeamList.Team4].score + " points\n";
+        }
+        gameOverText += "Press escape to return to menu.";
+        pauseText.text = gameOverText;
     }
 }

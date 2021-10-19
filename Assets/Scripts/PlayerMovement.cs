@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     //--------------POINTERS----------------------------
     [SerializeField] private SpriteRenderer _freezeSprite;
     [SerializeField] private ControlScript _controlScript;
+    public RoundManager roundManager;
 
     private float _freezeTimer;
     private float _minimumFreezeDuration;
@@ -84,32 +85,32 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         // Fire and ice cancel each other out
-        if(_isOnFire && _isFrozen)
+        if (_isOnFire && _isFrozen)
         {
             Extinguish();
             Thaw();
             gameObject.GetComponent<Player>().Extinguish();
         }
 
-        if(!_isOnFire)
+        // Movement only during the round
+        if (!roundManager.gameOver && roundManager.isRoundStarted)
         {
-            NormalMovement();
-        }
+            if (!_isOnFire)
+            {
+                NormalMovement();
+            }
 
-        // Fire has a different form of movement
-        else
-        {
-            FireMovement();
-        }
-        
+            // Fire has a different form of movement
+            else
+            {
+                FireMovement();
+            }
+        } 
     }
 
     private void NormalMovement()
     {
-        
-
         float spd = _speed;
         if(_isFrozen)
         {
@@ -118,7 +119,6 @@ public class PlayerMovement : MonoBehaviour
 
         transform.position += transform.up * spd * Vertical;
         transform.position += transform.right * spd * Horizontal;
-
     }
 
     private void FireMovement()

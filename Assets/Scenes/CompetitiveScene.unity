@@ -9048,6 +9048,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isRoundStarted: 0
+  gameOver: 0
   camera: {fileID: 634684811}
   controlScript: {fileID: 479393253}
   spawners:
@@ -55871,6 +55872,14 @@ PrefabInstance:
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: roundManager
+      value: 
+      objectReference: {fileID: 203019272}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: _controlScript
+      value: 
+      objectReference: {fileID: 479393253}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: movement.m_SingletonActionBindings.Array.data[1].m_Path
       value: <Keyboard>/i
       objectReference: {fileID: 0}
@@ -56297,6 +56306,14 @@ PrefabInstance:
       propertyPath: _speed
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: roundManager
+      value: 
+      objectReference: {fileID: 203019272}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: _controlScript
+      value: 
+      objectReference: {fileID: 479393253}
     - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: movement.m_SingletonActionBindings.Array.data[1].m_Path
       value: <Keyboard>/w
@@ -75413,6 +75430,14 @@ PrefabInstance:
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: roundManager
+      value: 
+      objectReference: {fileID: 203019272}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: _controlScript
+      value: 
+      objectReference: {fileID: 479393253}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: movement.m_SingletonActionBindings.Array.data[1].m_Path
       value: <Keyboard>/upArrow
       objectReference: {fileID: 0}
@@ -81826,6 +81851,14 @@ PrefabInstance:
       propertyPath: _speed
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: roundManager
+      value: 
+      objectReference: {fileID: 203019272}
+    - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
+      propertyPath: _controlScript
+      value: 
+      objectReference: {fileID: 479393253}
     - target: {fileID: 6964228607516325894, guid: 1061ccfd8b643754f898efbba9ca1680, type: 3}
       propertyPath: movement.m_SingletonActionBindings.Array.data[1].m_Path
       value: <Gamepad>/leftStick/up
