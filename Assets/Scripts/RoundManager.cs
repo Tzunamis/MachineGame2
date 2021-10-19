@@ -391,7 +391,6 @@ public class RoundManager : MonoBehaviour
                     _hatColor.color = _hatColorPlayer3;
                     break;
             }
-            Debug.Log(_hatColorPlayer0);
 
             //Place player and update teamdata reference
             currentTeam.playerList[currentTeam.playerIDToSpawn] = playerToRegister;
@@ -616,6 +615,7 @@ public class RoundManager : MonoBehaviour
 
     private void IncrementScore()
     {
+        Debug.Log("Incrementing score");
         for (int i = 0; i < _numberTeams; i++)
         {
             TeamData currentTeam = Teams[(TeamList)i];
