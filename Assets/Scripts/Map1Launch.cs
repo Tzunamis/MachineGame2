@@ -7,13 +7,25 @@ public class Map1Launch : MonoBehaviour
 {
     public void mapOne()
     {
-        SceneManager.LoadScene("TriangleTestScene");
+        SceneManager.LoadScene("TriangleTestSceneTristan");
         SceneManager.UnloadSceneAsync("StartMenu");
     }
 
     public void mapTwo()
     {
-        SceneManager.LoadScene("TriangleTestSceneTristan");
+        SceneManager.LoadScene("CompetitiveScene");
+        SceneManager.UnloadSceneAsync("StartMenu");
+    }
+
+    public void mapThree()
+    {
+        SceneManager.LoadScene("NewLevelDiffrent");
+        SceneManager.UnloadSceneAsync("StartMenu");
+    }
+
+    public void mapMetrics()
+    {
+        SceneManager.LoadScene("MetricGym");
         SceneManager.UnloadSceneAsync("StartMenu");
     }
 
