@@ -88,6 +88,9 @@ public class RoundManager : MonoBehaviour
     public Canvas pauseCanvas;
     public Text pauseText;
 
+    // Player sprites
+    private Animator animator;
+
     // Singleton pattern
     private static RoundManager _instance;
 
@@ -119,8 +122,16 @@ public class RoundManager : MonoBehaviour
         _numMachinesPerTeam = controlScript.numMachinesPerTeam;
         _isSimultaneous = controlScript.isSimultaneous;
         _scoreFrequency = controlScript.scoreFrequency;
-        _numRounds = _numberTeams * controlScript.numOfRoundsPerTeam;
         _roundDuration = controlScript.roundDuration;
+
+        if(_isSimultaneous)
+        {
+            _numRounds = controlScript.numOfRoundsPerTeam;
+        }
+        else
+        {
+            _numRounds = _numberTeams * controlScript.numOfRoundsPerTeam;
+        }
 
         // Disable "game over" canvas
         pauseCanvas.enabled = false;
@@ -149,19 +160,19 @@ public class RoundManager : MonoBehaviour
 
 
         // Hat color try
-        _hatColor = transform.Find("Player").transform.Find("JustHat").GetComponent<SpriteRenderer>();
+            //_hatColor = transform.Find("Player").transform.Find("JustHat").GetComponent<SpriteRenderer>();
         //here  the name of the "Player" will be different? depending on pants????
 
         //do a for each loop somehow
 
         //Setting red
-        _hatColorPlayer1 = new Color(0.6078432f, 0.2313726f, 0.1333333f);
+            //_hatColorPlayer1 = new Color(0.6078432f, 0.2313726f, 0.1333333f);
         //Setting yellow
-        _hatColorPlayer2 = new Color(0.854902f, 0.6901961f, 0);
+            //_hatColorPlayer2 = new Color(0.854902f, 0.6901961f, 0);
         //Setting blue
-        _hatColorPlayer3 = new Color(0.2039216f, 0.2509804f, 0.4705882f);
+            //_hatColorPlayer3 = new Color(0.2039216f, 0.2509804f, 0.4705882f);
         //Setting green
-        _hatColorPlayer4 = new Color(0.4941176f, 0.5333334f, 0.145098f);
+            //_hatColorPlayer4 = new Color(0.4941176f, 0.5333334f, 0.145098f);
 
     }
 
@@ -347,6 +358,19 @@ public class RoundManager : MonoBehaviour
             else
             {
                 playerToRegister.SetActive(false);
+            }
+
+            // Set player sprite according to team
+            animator = playerToRegister.GetComponent<Animator>();
+
+            switch(currentSpawner.teamSpawnType)
+            {
+                case TeamList.Team2:
+                    animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animations/Player2_Controller");
+                    break;
+                case TeamList.Team3:
+                    animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animations/Player3_Controller");
+                    break;
             }
 
             //Place player and update teamdata reference
