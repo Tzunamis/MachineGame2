@@ -59,14 +59,21 @@ public class Machine : MonoBehaviour, Interactable
         ControlScript controlScript = controlScriptGameObject.GetComponent<ControlScript>();
 
         // Set initial heat
-        _currentHeat = Random.Range(controlScript.minStartingHeat, controlScript.maxStartingHeat);
-        // Set heat rate
-        _heatRate = Random.Range(controlScript.minHeatRate, controlScript.maxHeatRate);
-        // Chance for negative heat rate
-        if(Random.Range(0f, 1f) <= 0.5f)
+        if(_currentHeat == 0)
         {
-            _heatRate = -_heatRate;
+            _currentHeat = Random.Range(controlScript.minStartingHeat, controlScript.maxStartingHeat);
         }
+        // Set heat rate
+        if(_heatRate == 0)
+        {
+            _heatRate = Random.Range(controlScript.minHeatRate, controlScript.maxHeatRate);
+            // Chance for negative heat rate
+            if (Random.Range(0f, 1f) <= 0.5f)
+            {
+                _heatRate = -_heatRate;
+            }
+        }
+        
         // Set product rate
         _productRate = controlScript.productRate;
         // Set explosion radius
