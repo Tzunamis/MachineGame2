@@ -144,6 +144,17 @@ public class RoundManager : MonoBehaviour
         UpdateScoreUI();
         UpdateTimerUI();
 
+        // Set hat colours
+        // Setting red
+         _hatColorPlayer0 = new Color(0.6078432f, 0.2313726f, 0.1333333f, 1f);
+        //Setting yellow
+        _hatColorPlayer1 = new Color(0.854902f, 0.6901961f, 0f, 1f);
+        //Setting blue
+        _hatColorPlayer2 = new Color(0.2039216f, 0.2509804f, 0.4705882f, 1f);
+        //Setting green
+        _hatColorPlayer3 = new Color(0.4941176f, 0.5333334f, 0.145098f, 1f);
+
+
         // Manage players
         if (_spawningPlayers)
         {
@@ -159,20 +170,7 @@ public class RoundManager : MonoBehaviour
         // Called at the start of each round
         InitializeRound();
 
-
-        // Hat color try
-        _hatColor = transform.Find("Player").transform.Find("JustHat").GetComponent<SpriteRenderer>();
-
-
-        //Setting red
-        _hatColorPlayer0 = new Color(0.6078432f, 0.2313726f, 0.1333333f);
-        //Setting yellow
-        _hatColorPlayer1 = new Color(0.854902f, 0.6901961f, 0);
-        //Setting blue
-        _hatColorPlayer2 = new Color(0.2039216f, 0.2509804f, 0.4705882f);
-        //Setting green
-        _hatColorPlayer3 = new Color(0.4941176f, 0.5333334f, 0.145098f);
-
+        
     }
 
     private void InitializeTeams()
@@ -372,6 +370,9 @@ public class RoundManager : MonoBehaviour
                     break;
             }
 
+            // Set player hat colour
+            _hatColor = playerToRegister.transform.GetChild(2).GetComponent<SpriteRenderer>();
+
             switch (currentTeam.playerIDToSpawn)
             {
                 case 0:
@@ -390,6 +391,7 @@ public class RoundManager : MonoBehaviour
                     _hatColor.color = _hatColorPlayer3;
                     break;
             }
+            Debug.Log(_hatColorPlayer0);
 
             //Place player and update teamdata reference
             currentTeam.playerList[currentTeam.playerIDToSpawn] = playerToRegister;

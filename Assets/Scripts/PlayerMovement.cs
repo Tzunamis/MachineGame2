@@ -46,7 +46,8 @@ public class PlayerMovement : MonoBehaviour
 
     //--------------ANIMATOR----------------------------
     Animator animator; 
-    SpriteRenderer spriteRenderer; 
+    SpriteRenderer spriteRenderer;
+    private bool movingLeft = false;
 
     private void Awake()
     {
@@ -254,11 +255,19 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isWalking", true);
             if (Horizontal < 0)
             {
-                spriteRenderer.flipX = true;
+                if(!movingLeft)
+                {
+                    gameObject.transform.localScale = new Vector3(-gameObject.transform.localScale.x, gameObject.transform.localScale.y, gameObject.transform.localScale.z);
+                }
+                movingLeft = true;
             }
             else if (Horizontal >= 0)
             {
-                spriteRenderer.flipX = false;
+                if (movingLeft)
+                {
+                    gameObject.transform.localScale = new Vector3(-gameObject.transform.localScale.x, gameObject.transform.localScale.y, gameObject.transform.localScale.z);
+                }
+                movingLeft = false;
             }
         }
     }
