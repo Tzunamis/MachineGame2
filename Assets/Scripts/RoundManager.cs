@@ -15,6 +15,7 @@ public class RoundManager : MonoBehaviour
     private float _scoreFrequency; // Poorly named. This is how often points are scored by the active team(s)
     private float _scoreTimer = 0;
     public GameObject camera;
+    private bool _rotateCamera;
 
     //Hat color try
     private SpriteRenderer _hatColor;
@@ -124,6 +125,7 @@ public class RoundManager : MonoBehaviour
         _isSimultaneous = controlScript.isSimultaneous;
         _scoreFrequency = controlScript.scoreFrequency;
         _roundDuration = controlScript.roundDuration;
+        _rotateCamera = controlScript.rotateCamera;
 
         if(_isSimultaneous)
         {
@@ -467,7 +469,7 @@ public class RoundManager : MonoBehaviour
             }
 
             // Rotate camera to next arena if needed
-            if(camera != null)
+            if(_rotateCamera && camera != null)
             {
                 camera.transform.RotateAround(Vector3.zero, Vector3.forward, 120);
             }

@@ -35,6 +35,7 @@ public class ControlScript : MonoBehaviour
     public int numPlayersPerTeam;
     public int numMachinesPerTeam;
     public bool isSimultaneous;
+    public bool rotateCamera;
     [Header("Other")]
     public float productRate;
     public float explosionRadius;
