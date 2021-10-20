@@ -51,7 +51,6 @@ public class Player : MonoBehaviour
             }
         }
 
-        OpenMenu();
     }
 
     private void FindInteractableObject()
@@ -214,17 +213,4 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OpenMenu()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            var lastSceneIndex = SceneManager.sceneCount - 1;
-            var lastLoadedScene = SceneManager.GetSceneAt(lastSceneIndex);
-
-            SceneManager.LoadScene("StartMenu");
-            SceneManager.UnloadSceneAsync(lastLoadedScene);
-            //SceneManager.UnloadSceneAsync("TriangleTestScene");
-            //SceneManager.UnloadSceneAsync("TriangleTestSceneTristan");
-        }
-    }
 }

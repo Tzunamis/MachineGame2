@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class RoundManager : MonoBehaviour
 {
@@ -531,6 +532,12 @@ public class RoundManager : MonoBehaviour
             isRoundStarted = true;
             pauseCanvas.enabled = false;
         }
+        
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            OpenMenu();
+        }
+        
     }
 
     //private void BindControls()
@@ -686,5 +693,14 @@ public class RoundManager : MonoBehaviour
         }
         gameOverText += "Press escape to return to menu.";
         pauseText.text = gameOverText;
+    }
+
+    private void OpenMenu()
+    {
+        var lastSceneIndex = SceneManager.sceneCount - 1;
+        var lastLoadedScene = SceneManager.GetSceneAt(lastSceneIndex);
+
+        SceneManager.LoadScene("StartMenu");
+        SceneManager.UnloadSceneAsync(lastLoadedScene);
     }
 }
